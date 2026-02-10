@@ -1,5 +1,4 @@
-# Eunoia embedded demo (B2: Responses API)
-
+# Eunoia
 This is a minimal full-stack demo:
 - `public/index.html` – your landing page with an embedded chat widget
 - `server.js` – Express backend that calls the OpenAI Responses API
