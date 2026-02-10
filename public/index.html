@@ -162,7 +162,7 @@
       <div>
         <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Demo</h2>
         <p class="mt-2 text-slate-600">
-          Ask about programs, labs, advisors, and how your background fits. (This is the embedded B2 demo.)
+          Ask about programs, labs, advisors, and how your background fits.
         </p>
       </div>
 
@@ -506,15 +506,13 @@
         localStorage.setItem(key, JSON.stringify(existing));
 
         const el = document.getElementById("waitlistStatus");
-        el.textContent = "Thanks — you’re on the list! (Saved locally in this browser for now.)";
+        el.textContent = "Thanks — you’re on the list!";
         form.reset();
         return false;
       }
     </script>
   <script>
-  // ---------------------------------------------------------------------------
-  // Embedded chat demo (B2: your backend calls OpenAI Responses API)
-  // ---------------------------------------------------------------------------
+
   const chatMessagesEl = document.getElementById("chatMessages");
   const chatFormEl = document.getElementById("chatForm");
   const chatInputEl = document.getElementById("chatInput");
