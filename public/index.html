@@ -56,7 +56,6 @@
           <span>Eunoia</span>
         </a>
         <nav class="hidden md:flex items-center gap-6 text-sm text-slate-600">
-                    <a class="hover:text-slate-900" href="#demo">Demo</a>
 <a class="hover:text-slate-900" href="#how">How it works</a>
           <a class="hover:text-slate-900" href="#value">Why Eunoia</a>
           <a class="hover:text-slate-900" href="#pricing">Pricing</a>
@@ -64,11 +63,9 @@
         </nav>
         <div class="flex items-center gap-2">
           <a
-            href="#waitlist"
+            href="/app.html"
             class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-          >
-            Get early access
-          </a>
+          >Open App</a>
         </div>
       </div>
     </header>
@@ -92,17 +89,10 @@
 
             <div class="mt-7 flex flex-col sm:flex-row gap-3">
               <a
-                href="#demo"
+                href="/app.html"
                 class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 shadow-soft"
-              >
-                See demo
-              </a>
-              <a
-                href="#how"
-                class="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 border border-slate-200 hover:bg-slate-50"
-              >
-                See how it works
-              </a>
+              >Open App</a>
+              <a href="#how" class="text-sm font-semibold text-slate-700 hover:text-slate-900 underline underline-offset-4">Learn how it works</a>
             </div>
 
             <div class="mt-6 text-sm text-slate-500">
@@ -154,74 +144,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Embedded Demo -->
-<section id="demo" class="mx-auto max-w-6xl px-4 py-12">
-  <div class="rounded-3xl bg-white border border-slate-200 p-6 md:p-8 shadow-soft">
-    <div class="flex items-start justify-between gap-4 flex-wrap">
-      <div>
-        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Demo</h2>
-        <p class="mt-2 text-slate-600">
-          Ask about programs, labs, advisors, and how your background fits.
-        </p>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button
-          id="chatReset"
-          type="button"
-          class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 border border-slate-200 hover:bg-slate-50"
-          title="Clear the chat"
-        >
-          Reset
-        </button>
-      </div>
-    </div>
-    <!-- Fake reset progress -->
-    <div id="resetProgressWrap" class="hidden mt-3 w-full">
-      <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
-        <div
-          id="resetProgressBar"
-          class="h-full w-0 bg-slate-900 transition-all duration-700 ease-out"
-        ></div>
-      </div>
-      <div class="mt-1 text-xs text-slate-500">Resetting…</div>
-    </div>
-
-    <div
-      id="chatMessages"
-      class="mt-6 h-[360px] md:h-[420px] overflow-y-auto rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-3"
-    >
-      <!-- Messages injected by JS -->
-    </div>
-
-    <form id="chatForm" class="mt-4 flex gap-2 items-end">
-      <label class="flex-1 block">
-        <span class="sr-only">Message</span>
-        <textarea
-          id="chatInput"
-          rows="2"
-          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300 resize-none"
-          placeholder="e.g., I’m interested in HCI + systems. I have 2 years of research in usability studies..."
-          required
-        ></textarea>
-        <div class="mt-3">
-          <div class="text-xs text-slate-500 mb-2">Try an example:</div>
-          <div id="examplePrompts" class="flex flex-wrap gap-2"></div>
-        </div>
-      </label>
-
-      <button
-        id="chatSend"
-        type="submit"
-        class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 shadow-soft"
-      >
-        Send
-      </button>
-    </form>
-
-  </div>
-</section>
 
     <!-- How it works -->
     <section id="how" class="mx-auto max-w-6xl px-4 py-14">
@@ -356,116 +278,24 @@
       </div>
     </section>
 
-    <!-- Waitlist -->
-    <section id="waitlist" class="mx-auto max-w-6xl px-4 pb-16">
+    <!-- Open App -->
+    <section id="open-app" class="mx-auto max-w-6xl px-4 pb-16">
       <div class="rounded-3xl bg-white border border-slate-200 p-8 shadow-soft">
-        <div class="grid lg:grid-cols-2 gap-8 items-center">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div>
-            <h2 class="text-3xl font-bold tracking-tight">Join the waitlist</h2>
-            <p class="mt-2 text-slate-600">
-              Tell us your area of interest and we’ll invite you as soon as your cohort opens.
-            </p>
-            <div class="mt-4 text-sm text-slate-500">
-              Tip: Start with your intended area (e.g., HCI, CV, Security) and desired degree.
-            </div>
+            <h2 class="text-3xl font-bold tracking-tight">Ready to try Eunoia?</h2>
           </div>
-
-          <form class="space-y-3" onsubmit="return handleWaitlistSubmit(event)">
-            <div class="grid sm:grid-cols-2 gap-3">
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700">Name</span>
-                <input
-                  required
-                  name="name"
-                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-                  placeholder="Jane Doe"
-                />
-              </label>
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700">Email</span>
-                <input
-                  required
-                  type="email"
-                  name="email"
-                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-                  placeholder="jane@school.edu"
-                />
-              </label>
-            </div>
-
-            <div class="grid sm:grid-cols-2 gap-3">
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700">Interest area</span>
-                <input
-                  name="interest"
-                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-                  placeholder="HCI, CV, Security…"
-                />
-              </label>
-              <label class="block">
-                <span class="text-sm font-medium text-slate-700">Degree</span>
-                <select
-                  name="degree"
-                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-                >
-                  <option>MS</option>
-                  <option>PhD</option>
-                  <option>MS/PhD</option>
-                  <option>Not sure yet</option>
-                </select>
-              </label>
-            </div>
-
-            <button
-              class="w-full rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-              type="submit"
-            >
-              Request access
-            </button>
-
-            <p id="waitlistStatus" class="text-sm text-slate-600"></p>
-
-          </form>
+          <a
+            href="/app.html"
+            class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 shadow-soft"
+          >
+            Open App
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq" class="mx-auto max-w-6xl px-4 pb-16">
-      <div class="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
-        <h2 class="text-3xl font-bold tracking-tight">FAQ</h2>
-        <div class="mt-6 grid md:grid-cols-2 gap-6">
-          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
-            <h3 class="font-semibold">What makes Eunoia different from normal search?</h3>
-            <p class="mt-2 text-sm text-slate-600">
-              Instead of relying on coarse tags, Eunoia can interpret distributed lab info and answer fuzzy queries conversationally.
-            </p>
-          </div>
-          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
-            <h3 class="font-semibold">Can it help me write my SOP?</h3>
-            <p class="mt-2 text-sm text-slate-600">
-              It’s built to surface specific papers/methods and explain fit—so you can write with genuine lab familiarity.
-            </p>
-          </div>
-          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
-            <h3 class="font-semibold">Where are you starting?</h3>
-            <p class="mt-2 text-sm text-slate-600">
-              We’ll begin with universities and a specialized niche (e.g., computer vision) to get strong feedback and product-market fit.
-
-            </p>
-          </div>
-          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
-            <h3 class="font-semibold">When will pricing be finalized?</h3>
-            <p class="mt-2 text-sm text-slate-600">
-              We’ll price sustainably from cost-of-goods baseline, then A/B test to find the best value point.
-
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
+<!-- Footer -->
     <footer class="border-t border-slate-200 bg-white">
       <div class="mx-auto max-w-6xl px-4 py-10 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
         <div class="text-sm text-slate-600">
@@ -479,7 +309,7 @@
         <div class="text-sm text-slate-600 flex gap-5">
           <a class="hover:text-slate-900" href="#how">How it works</a>
           <a class="hover:text-slate-900" href="#pricing">Pricing</a>
-          <a class="hover:text-slate-900" href="#waitlist">Waitlist</a>
+          <a class="hover:text-slate-900" href="#open-app">Waitlist</a>
           <a
           class="hover:text-slate-900"
           href="/Eunoia Business Proposal.pdf"
@@ -492,321 +322,5 @@
       </div>
     </footer>
 
-    <script>
-      function handleWaitlistSubmit(e) {
-        e.preventDefault();
-        const form = e.target;
-        const data = Object.fromEntries(new FormData(form).entries());
-
-        // Demo behavior: store locally + show message.
-        // Replace with a real POST to your backend / Formspree / Airtable / etc.
-        const key = "eunoia_waitlist";
-        const existing = JSON.parse(localStorage.getItem(key) || "[]");
-        existing.push({ ...data, ts: new Date().toISOString() });
-        localStorage.setItem(key, JSON.stringify(existing));
-
-        const el = document.getElementById("waitlistStatus");
-        el.textContent = "Thanks — you’re on the list!";
-        form.reset();
-        return false;
-      }
-    </script>
-  <script>
-
-  const chatMessagesEl = document.getElementById("chatMessages");
-  const chatFormEl = document.getElementById("chatForm");
-  const chatInputEl = document.getElementById("chatInput");
-  const chatResetEl = document.getElementById("chatReset");
-  const chatSendEl = document.getElementById("chatSend");
-
-  // We keep multi-turn context using the previous response id from the Responses API.
-  // Stored locally so refresh keeps the conversation.
-  const STORAGE_KEY = "eunoia_prev_response_id";
-  let previousResponseId = localStorage.getItem(STORAGE_KEY) || null;
-
-  const EXAMPLE_PROMPTS = [
-  {
-    label: "CS PhD · NLP / LLMs",
-    text: "I'm applying for a CS PhD in the US. Interests: NLP and large language models (alignment, instruction tuning). Background: transformer fine-tuning, some RL. Suggest matching labs and advisors and explain fit."
-  },
-  {
-    label: "HCI · User Studies",
-    text: "I'm applying for a CS PhD. Interests: HCI and accessibility. Background: 2 user-study projects. Find labs/advisors and tell me what to emphasize in my SOP."
-  },
-  {
-    label: "ML Systems · Efficiency",
-    text: "I'm interested in ML systems for efficient training and inference (quantization, distillation, distributed systems). Background: CUDA and distributed training. Recommend labs and key skills to highlight."
-  },
-  {
-    label: "CV + Robotics",
-    text: "I'm interested in vision-language models for robotics manipulation. Background: computer vision, ROS, some RL. Target: US and Canada. Suggest programs, labs, and advisors."
-  },
-  {
-    label: "Not sure yet",
-    text: "I'm interested in deep learning but not sure which subfield fits me best. Ask me a few clarifying questions, then suggest possible research directions and matching labs."
-  },
-  {
-    label: "School shortlist",
-    text: "Profile: GPA 3.6, one arXiv NLP paper, strong engineering, weaker theory. Help me shortlist CS PhD programs and explain why each is a good fit."
-  },
-  ];
-
-  function renderExamplePrompts() {
-    const wrap = document.getElementById("examplePrompts");
-    if (!wrap) return;
-
-    wrap.innerHTML = "";
-    for (const ex of EXAMPLE_PROMPTS) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className =
-        "rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 " +
-        "active:scale-[0.99] transition shadow-sm";
-      btn.textContent = ex.label;
-      btn.setAttribute("aria-label", `Use example: ${ex.label}`);
-
-      btn.addEventListener("click", () => {
-        // Prevent clicks while generating (works if you disable input/button during streaming)
-        if (chatInputEl?.disabled) return;
-
-        chatInputEl.value = ex.text;
-        chatInputEl.focus();
-
-      });
-
-      wrap.appendChild(btn);
-    }
-  }
-
-  renderExamplePrompts();
-
-  function escapeHtml(s) {
-    return s
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  function addMessage(role, text) {
-    const wrapper = document.createElement("div");
-    const isUser = role === "user";
-
-    wrapper.className = "flex " + (isUser ? "justify-end" : "justify-start");
-
-    const bubble = document.createElement("div");
-    bubble.className =
-      "max-w-[85%] rounded-2xl border border-slate-200 px-4 py-3 text-sm leading-relaxed " +
-      (isUser ? "bg-white" : "bg-white");
-
-    const meta = document.createElement("div");
-    meta.className = "text-[11px] font-semibold text-slate-600 mb-1";
-    meta.textContent = isUser ? "You" : "Eunoia";
-
-    const body = document.createElement("div");
-    body.className = "text-slate-800 whitespace-pre-wrap";
-    body.innerHTML = escapeHtml(text);
-
-    bubble.appendChild(meta);
-    bubble.appendChild(body);
-    wrapper.appendChild(bubble);
-
-    chatMessagesEl.appendChild(wrapper);
-    chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-
-    return body; // allow live updates
-  }
-
-  function setBusy(isBusy) {
-    chatSendEl.disabled = isBusy;
-    chatInputEl.disabled = isBusy;
-    chatSendEl.classList.toggle("opacity-60", isBusy);
-    chatSendEl.classList.toggle("cursor-not-allowed", isBusy);
-  }
-
-  function resetChat() {
-    chatMessagesEl.innerHTML = "";
-    previousResponseId = null;
-    localStorage.removeItem(STORAGE_KEY);
-    addMessage("assistant", "Hi! Tell me your interests (area, methods, constraints) and I’ll suggest programs/labs/advisors and explain fit.");
-    renderExamplePrompts()
-  }
-
-  const resetProgressWrap = document.getElementById("resetProgressWrap");
-  const resetProgressBar = document.getElementById("resetProgressBar");
-
-  const FAKE_RESET_MS = 650;
-
-  function resetChatWithProgress() {
-    // Prevent double clicks
-    if (chatResetEl.disabled) return;
-
-    // Show progress UI
-    if (resetProgressWrap && resetProgressBar) {
-      resetProgressWrap.classList.remove("hidden");
-      resetProgressBar.style.width = "0%";
-
-      // force reflow so the transition always runs
-      resetProgressBar.offsetHeight;
-
-      resetProgressBar.style.width = "100%";
-    }
-
-    // Disable controls during fake reset
-    setBusy(true);
-
-    // Perform actual reset near the end of the animation
-    setTimeout(() => {
-      resetChat();
-    }, FAKE_RESET_MS - 80);
-
-    // Hide progress + re‑enable controls
-    setTimeout(() => {
-      if (resetProgressWrap) resetProgressWrap.classList.add("hidden");
-      if (resetProgressBar) resetProgressBar.style.width = "0%";
-      setBusy(false);
-    }, FAKE_RESET_MS + 120);
-  }
-
-  // async function sendToBackend(message) {
-  //   const res = await fetch("/api/chat", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({
-  //       message,
-  //       previous_response_id: previousResponseId,
-  //     }),
-  //   });
-
-  //   if (!res.ok) {
-  //     const errText = await res.text();
-  //     throw new Error(errText || "Request failed");
-  //   }
-  //   return res.json();
-  // }
-
-  async function sendToBackendStream(message, assistantBodyEl) {
-    const res = await fetch("/api/chat/stream", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message,
-        previous_response_id: previousResponseId,
-      }),
-    });
-
-    if (!res.ok || !res.body) {
-      throw new Error("Streaming request failed");
-    }
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-
-    let buffer = "";
-    let text = "";
-    let nextResponseId = null;
-
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-
-      let idx;
-      while ((idx = buffer.indexOf("\n\n")) !== -1) {
-        const raw = buffer.slice(0, idx);
-        buffer = buffer.slice(idx + 2);
-
-        let event = "message";
-        let dataLines = [];
-
-        for (const line of raw.split("\n")) {
-          if (line.startsWith("event:")) event = line.slice(6).trim();
-          if (line.startsWith("data:")) dataLines.push(line.slice(5));
-        }
-
-        const data = dataLines.join("\n");
-
-        if (event === "delta") {
-          text += data;
-          assistantBodyEl.textContent = text;
-        }
-
-        if (event === "meta") {
-          const obj = JSON.parse(data);
-          if (obj.response_id) nextResponseId = obj.response_id;
-        }
-
-        if (event === "done") {
-          const obj = JSON.parse(data);
-          if (obj.response_id) nextResponseId = obj.response_id;
-        }
-
-        if (event === "error") {
-          assistantBodyEl.textContent += "\n\n[Error streaming response]";
-        }
-      }
-    }
-
-    return nextResponseId;
-  }
-
-chatFormEl.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const message = (chatInputEl.value || "").trim();
-    if (!message) return;
-
-    addMessage("user", message);
-    chatInputEl.value = "";
-
-    // const assistantBodyEl = addMessage("assistant", "…");
-    // setBusy(true);
-
-    // try {
-    //   const data = await sendToBackend(message);
-
-    //   // Backend returns:
-    //   // - data.reply: assistant text
-    //   // - data.response_id: the Response id to pass as previous_response_id next turn
-    //   assistantBodyEl.textContent = (data.reply || "").trim() || "(no text output)";
-    //   if (data.response_id) {
-    //     previousResponseId = data.response_id;
-    //     localStorage.setItem(STORAGE_KEY, previousResponseId);
-    //   }
-    // } catch (err) {
-    //   assistantBodyEl.textContent =
-    //     "Sorry — the embedded demo failed to respond. " +
-    //     "If you're running locally, make sure the backend is running and OPENAI_API_KEY is set.";
-    //   console.error(err);
-    // } finally {
-    //   setBusy(false);
-    //   chatInputEl.focus();
-    // }
-    const assistantBodyEl = addMessage("assistant", "");
-    setBusy(true);
-
-    try {
-      const rid = await sendToBackendStream(message, assistantBodyEl);
-      if (rid) {
-        previousResponseId = rid;
-        localStorage.setItem(STORAGE_KEY, previousResponseId);
-      }
-    } catch (err) {
-      assistantBodyEl.textContent =
-        "Sorry — streaming failed. Check the server.";
-      console.error(err);
-    } finally {
-      setBusy(false);
-      chatInputEl.focus();
-    }
-  });
-
-  chatResetEl.addEventListener("click", resetChatWithProgress);
-
-  // Initialize
-  resetChat();
-</script>
-
-  </body>
+    </body>
 </html>

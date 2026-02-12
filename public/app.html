@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Eunoia App</title>
+
+    <!-- Fonts (Manus/ChatGPT-like) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            boxShadow: {
+              soft: "0 12px 40px rgba(0,0,0,0.08)",
+              menu: "0 16px 50px rgba(0,0,0,0.12)"
+            },
+            colors: {
+              paper: "#F6F6F5",
+              ink: "#111827",
+              muted: "#6B7280"
+            }
+          },
+        },
+      };
+    </script>
+    
+    <!-- Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
+
+</script>
+
+    <style>
+      :root { color-scheme: light; }
+      html, body {
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+        background: #F7F7F5;
+        letter-spacing: -0.01em;
+      }
+      body {
+        font-family: Inter, "Noto Sans SC", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+        background: #F6F6F5;
+      }
+
+      /* Hide scrollbars (but keep scroll) for sidebar chat list */
+      .no-scrollbar::-webkit-scrollbar { width: 0px; height: 0px; }
+      .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+      /* Subtle icon button hover like Manus */
+      .icon-btn {
+        border-radius: 12px;
+        padding: 10px;
+        transition: background 120ms ease, transform 120ms ease;
+      }
+      .icon-btn:hover { background: rgba(0,0,0,0.05); }
+      .icon-btn:active { transform: scale(0.98); }
+
+      /* Toast */
+      #toast { pointer-events: none; }
+
+      /* Markdown styles for assistant output */
+      .md {
+        color: rgba(0,0,0,0.78);
+        font-size: 16.5px;
+        line-height: 1.75;
+        word-break: break-word;
+        word-break: break-word;
+      }
+      .md h1, .md h2, .md h3, .md h4 {
+        color: rgba(0,0,0,0.85);
+        font-weight: 700;
+        line-height: 1.25;
+        margin: 1.0em 0 0.4em;
+      }
+      .md h1 { font-size: 1.6em; }
+      .md h2 { font-size: 1.35em; }
+      .md h3 { font-size: 1.18em; }
+      .md p { margin: 0.7em 0; }
+      .md ul, .md ol { margin: 0.7em 0 0.7em 1.25em; padding: 0; }
+      .md li { margin: 0.25em 0; }
+      .md blockquote {
+        margin: 0.9em 0;
+        padding: 0.25em 0 0.25em 0.9em;
+        border-left: 3px solid rgba(0,0,0,0.12);
+        color: rgba(0,0,0,0.65);
+      }
+      .md code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.92em;
+        background: rgba(0,0,0,0.04);
+        padding: 0.12em 0.35em;
+        border-radius: 8px;
+      }
+      .md pre {
+        margin: 0.9em 0;
+        padding: 0.9em 1em;
+        overflow: auto;
+        border-radius: 16px;
+        background: rgba(0,0,0,0.04);
+      }
+      .md pre code {
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        font-size: 0.9em;
+        display: block;
+        white-space: pre;
+      }
+      .md a {
+        color: rgba(17,24,39,0.95);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .md hr { margin: 1.2em 0; border: 0; border-top: 1px solid rgba(0,0,0,0.08); }
+      .md table { border-collapse: collapse; margin: 0.9em 0; width: 100%; }
+      .md th, .md td { border: 1px solid rgba(0,0,0,0.10); padding: 0.5em 0.6em; }
+      .md th { background: rgba(0,0,0,0.03); text-align: left; }
+
+
+    </style>
+  </head>
+
+  <body class="text-ink">
+    <div class="h-full flex">
+      <!-- Sidebar -->
+      <aside class="w-[296px] shrink-0 bg-paper/70 backdrop-blur border-r border-black/5">
+        <div class="h-full flex flex-col">
+          <!-- Brand -->
+          <a href="/" class="px-4 pt-5 pb-3 flex items-center gap-3 hover:opacity-90">
+            <!-- Sketch logo (inline SVG) -->
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+              <path d="M13 2.5c-4.8 0-8.7 3.4-8.7 7.7 0 2.2 1 4.1 2.7 5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M8.2 19.6c1.3 1.0 3 1.6 4.8 1.6 4.8 0 8.7-3.4 8.7-7.7 0-2.2-1-4.1-2.7-5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M9.2 8.7c.8-1.7 2.2-2.7 3.8-2.7 2.4 0 4.3 2.2 4.3 5 0 2.8-1.9 5-4.3 5-1.7 0-3.1-1.1-3.9-2.9" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M6.8 22.5c2.6-.8 3.8-2.3 4.6-4.1" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+
+            <div class="font-semibold tracking-tight text-[15px]">Eunoia</div>
+            <div class="text-xs text-black/40">app</div>
+
+          </a>
+
+          <!-- Primary actions -->
+          <div class="px-3">
+            <button id="newTaskBtn"
+              class="w-full flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold bg-black/90 text-white hover:bg-black">
+              <!-- pencil -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 20h9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              New chat
+            </button>
+          </div>
+
+          <div class="px-3 mt-3 space-y-1">
+            <!-- Search toggles chat search -->
+            <button id="searchToggleBtn"
+              class="w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-black/80 hover:bg-black/5">
+              <!-- magnifier -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" stroke="#111827" stroke-width="2"/>
+                <path d="M21 21l-4.35-4.35" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Search
+            </button>
+          </div>
+
+          <!-- Chats header -->
+          <div class="px-4 mt-5 mb-2 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-xs font-semibold text-black/40">
+              <span>Chat</span>
+              <span id="chatCountPill" class="hidden rounded-full bg-black/5 px-2 py-0.5 text-[11px] text-black/50"></span>
+            </div>
+<!--             <button id="collapseSidebarBtn" class="icon-btn -mr-2" title="Collapse">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button> -->
+          </div>
+
+          <!-- Search input (shown when 搜索 toggled) -->
+          <div id="searchRow" class="px-3 pb-2 hidden">
+            <div class="rounded-xl bg-white/60 backdrop-blur px-3 py-2 flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" stroke="#111827" stroke-width="2"/>
+                <path d="M21 21l-4.35-4.35" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <input id="searchInput"
+                     class="w-full bg-transparent outline-none text-sm placeholder:text-black/30"
+                     placeholder="Search chat…" />
+              <button id="searchClearBtn" class="icon-btn !p-1.5" title="Clear">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat list -->
+          <div id="chatList" class="px-2 pb-2 flex-1 overflow-y-auto no-scrollbar"></div>
+
+          <!-- User footer -->
+          <div class="px-3 py-3 border-t border-black/5">
+            <div class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-black/5">
+              <div class="h-9 w-9 rounded-full bg-indigo-600/90 grid place-items-center text-white font-semibold">
+                <span>U</span>
+              </div>
+              <div class="min-w-0">
+                <div class="text-sm font-semibold leading-tight truncate">Username</div>
+                <div class="text-xs text-black/40 leading-tight truncate">Eunoia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main (page scroll lives here, with rightmost scrollbar) -->
+      <main id="mainScroll" class="flex-1 h-full overflow-y-auto">
+        <!-- Top bar -->
+        <header class="sticky top-0 z-30 h-14 bg-paper/75 backdrop-blur border-b border-black/5">
+        <div class="h-full px-6 flex items-center">
+          <!-- Left: model dropdown -->
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <button
+                id="modelBtn"
+                class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+              >
+                <div class="flex items-center gap-1">
+                    <div class="text-sm font-semibold text-black/80">Eunoia</div>
+                    <span class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Lite </span>
+                    <span class="text-xs text-slate-500">▾</span>
+                </div>
+              </button>
+
+              <div
+                id="modelMenu"
+                class="hidden absolute mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-soft p-2 z-50"
+              >
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm" data-model="Eunoia Lite">
+                  <div class="flex items-center gap-1">
+                    <div class="text-sm font-semibold text-black/80">Eunoia</div>
+                    <span class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Lite </span>
+                    <span class="text-xs text-slate-500">(default)</span>
+                  </div>
+                </button>
+
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm" data-model="Eunoia Pro">
+                  <div class="flex items-center gap-1">
+                    <div class="text-sm font-semibold text-black/80">Eunoia</div>
+                    <span class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Pro</span>
+                    <span class="text-xs text-slate-500">(faster + deeper)</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: actions (pushed to the end) -->
+          <div class="ml-auto flex items-center gap-2">
+            <button id="topShareBtn" class="icon-btn flex items-center gap-2" title="Share">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 16v-9" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                <path d="M8.5 7.5 12 4l3.5 3.5" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M20 14.5v4A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-4" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span class="text-sm text-black/70">Share</span>
+            </button>
+
+            <button class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:bg-slate-50">🔔</button>
+
+            <div class="h-9 w-9 rounded-full bg-indigo-600/90 grid place-items-center text-white font-semibold">
+                <span>U</span>
+              </div>
+          </div>
+        </div>
+      </header>
+
+        <!-- Content -->
+        <section class="px-4 md:px-6 py-10 md:py-14">
+          <div class="mx-auto w-full max-w-3xl">
+            <!-- Title/intro (shown when no messages) -->
+            <div id="emptyState" class="text-center mb-10">
+
+              <!-- Brand -->
+              <a href="/" class="px-4 pt-5 pb-3 flex items-center gap-3 hover:opacity-90">
+                <!-- Sketch logo (inline SVG) -->
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                  <path d="M13 2.5c-4.8 0-8.7 3.4-8.7 7.7 0 2.2 1 4.1 2.7 5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M8.2 19.6c1.3 1.0 3 1.6 4.8 1.6 4.8 0 8.7-3.4 8.7-7.7 0-2.2-1-4.1-2.7-5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M9.2 8.7c.8-1.7 2.2-2.7 3.8-2.7 2.4 0 4.3 2.2 4.3 5 0 2.8-1.9 5-4.3 5-1.7 0-3.1-1.1-3.9-2.9" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M6.8 22.5c2.6-.8 3.8-2.3 4.6-4.1" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+                <div class="flex items-baseline gap-2">
+                  <div class="text-2xl md:text-4xl font-semibold">Eunoia <span class="text-muted font-medium">app</span></div>
+                </div>
+              </a>
+
+              <p class="text-sm md:text-[15px] text-black/55 leading-relaxed">
+                Hi! Tell me your interests (area, methods) and I’ll suggest programs/labs/advisors and explain fit.
+              </p>
+            </div>
+
+            <!-- Messages (borderless, same background as page) -->
+            <div id="chatMessages" class="space-y-8"></div>
+
+            <!-- Composer (borderless) -->
+            <div class="mt-10">
+              <form id="chatForm" class="rounded-2xl bg-transparent">
+                <div class="flex items-end gap-3 rounded-2xl bg-paper/70 backdrop-blur px-3 py-3">
+                  <button id="attachBtn" type="button" class="icon-btn !p-2" title="Attach file(s)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 5v14M5 12h14" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                  <input id="fileInput" type="file" class="hidden" multiple />
+
+                  <textarea id="chatInput" rows="1"
+                    class="flex-1 resize-none bg-transparent outline-none text-sm md:text-[15px] leading-6 placeholder:text-black/30"
+                    placeholder="Start with your goals..."
+                    required></textarea>
+
+                  <button id="voiceBtn" type="button" class="icon-btn !p-2" title="Voice input">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M19 11a7 7 0 0 1-14 0" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M12 18v3" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+
+                  <button id="chatSend" type="submit" class="icon-btn !p-2" title="Send">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M22 2 11 13" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Suggestion chips -->
+                <div class="mt-3 flex flex-wrap gap-2" id="examplePrompts"></div>
+                <div id="attachmentRow" class="mt-2 flex flex-wrap gap-2"></div>
+              </form>
+
+              <div class="mt-2 text-xs text-black/35 flex items-center justify-between">
+                <span>Streaming enabled</span>
+                <button id="chatReset" type="button" class="hover:text-black/60">Reset</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Context menu (ChatGPT-like) -->
+    <div id="ctxMenu" class="hidden fixed z-[60]">
+      <div class="w-[220px] rounded-2xl bg-white shadow-menu border border-black/5 p-2">
+        <button data-action="share" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-black/5 text-sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 16v-9" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8.5 7.5 12 4l3.5 3.5" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 14.5v4A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-4" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          分享
+        </button>
+
+        <button data-action="rename" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-black/5 text-sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Rename
+        </button>
+
+        <div class="my-2 h-px bg-black/5"></div>
+
+        <button data-action="delete" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-red-50 text-sm text-red-600">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6h18" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 6V4h8v2" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6.5 6l1 16h9l1-16" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 11v6M14 11v6" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 hidden z-[70]">
+      <div class="rounded-2xl bg-black/90 text-white px-4 py-2 text-sm shadow-soft">Copied</div>
+    </div>
+
+    <script>
+      // ----------------------------
+      // Storage & state
+      // ----------------------------
+      const LS_CHATS = "eunoia_chats_v3";
+      const LS_SELECTED = "eunoia_selected_chat_v3";
+
+      /** @type {{id:string,title:string,createdAt:number,messages:{role:'user'|'assistant',text:string,ts:number}[]}[]} */
+      let chats = [];
+      let selectedChatId = null;
+
+      function uid() {
+        return Math.random().toString(16).slice(2) + Date.now().toString(16);
+      }
+
+      function loadState() {
+        try { chats = JSON.parse(localStorage.getItem(LS_CHATS) || "[]"); } catch { chats = []; }
+        selectedChatId = localStorage.getItem(LS_SELECTED);
+        if (chats.length === 0) {
+          const c = createChat("Unclear Input or Typo");
+          chats = [c];
+          selectedChatId = c.id;
+          persist();
+        }
+        if (!selectedChatId || !chats.some(c => c.id === selectedChatId)) {
+          selectedChatId = chats[0].id;
+          persist();
+        }
+      }
+
+      function persist() {
+        localStorage.setItem(LS_CHATS, JSON.stringify(chats));
+        localStorage.setItem(LS_SELECTED, selectedChatId || "");
+      }
+
+      function getSelectedChat() {
+        return chats.find(c => c.id === selectedChatId) || chats[0];
+      }
+
+      function createChat(title = "Unclear Input or Typo") {
+        return { id: uid(), title, createdAt: Date.now(), messages: [] };
+      }
+
+      // --- model dropdown behavior (UI-only) ---
+      const modelBtn = document.getElementById("modelBtn");
+      const modelMenu = document.getElementById("modelMenu");
+      modelBtn.addEventListener("click", () => modelMenu.classList.toggle("hidden"));
+      modelMenu.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-model]");
+        if (!btn) return;
+        modelBtn.textContent = btn.dataset.model + " ▾";
+        modelMenu.classList.add("hidden");
+      });
+      document.addEventListener("click", (e) => {
+        if (!modelBtn.contains(e.target) && !modelMenu.contains(e.target)) modelMenu.classList.add("hidden");
+      });
+
+
+      // ----------------------------
+      // Elements
+      // ----------------------------
+      const chatListEl = document.getElementById("chatList");
+      const chatMessagesEl = document.getElementById("chatMessages");
+      const chatFormEl = document.getElementById("chatForm");
+      const chatInputEl = document.getElementById("chatInput");
+      const chatSendEl = document.getElementById("chatSend");
+      const chatResetEl = document.getElementById("chatReset");
+      const attachBtnEl = document.getElementById("attachBtn");
+      const fileInputEl = document.getElementById("fileInput");
+      const attachmentRowEl = document.getElementById("attachmentRow");
+      const voiceBtnEl = document.getElementById("voiceBtn");
+      const emptyStateEl = document.getElementById("emptyState");
+
+      const newTaskBtn = document.getElementById("newTaskBtn");
+      const searchToggleBtn = document.getElementById("searchToggleBtn");
+      const searchRowEl = document.getElementById("searchRow");
+      const searchInputEl = document.getElementById("searchInput");
+      const searchClearBtn = document.getElementById("searchClearBtn");
+      const chatCountPill = document.getElementById("chatCountPill");
+
+      const topShareBtn = document.getElementById("topShareBtn");
+
+      const ctxMenu = document.getElementById("ctxMenu");
+      let ctxTargetChatId = null;
+
+      // ----------------------------
+      // UI helpers
+      // ----------------------------
+      function showToast(text) {
+        const toast = document.getElementById("toast");
+        toast.querySelector("div").textContent = text;
+        toast.classList.remove("hidden");
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => toast.classList.add("hidden"), 1300);
+      }
+
+      function setBusy(isBusy) {
+        chatSendEl.disabled = isBusy;
+        chatInputEl.disabled = isBusy;
+        chatSendEl.style.opacity = isBusy ? "0.5" : "1";
+      }
+
+      function autoGrowTextarea(el) {
+        el.style.height = "auto";
+        el.style.height = Math.min(el.scrollHeight, 160) + "px";
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+      }
+      // Markdown -> safe HTML (for assistant output)
+      function renderMarkdown(md) {
+        if (window.marked && window.DOMPurify) {
+          marked.setOptions({ gfm: true, breaks: true });
+          const raw = marked.parse(md || "");
+          return DOMPurify.sanitize(raw, { USE_PROFILES: { html: true } });
+        }
+        // fallback
+        return escapeHtml(md || "").replace(/\n/g, "<br/>");
+      }
+
+      
+      // ----------------------------
+      // Attachments (local files)
+      // ----------------------------
+      let pendingAttachments = [];
+
+      function formatBytes(bytes) {
+        if (!bytes && bytes !== 0) return "";
+        const units = ["B","KB","MB","GB"];
+        let i = 0;
+        let n = bytes;
+        while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
+        return (i === 0 ? String(n) : n.toFixed(1)) + units[i];
+      }
+
+      function isProbablyText(type, name) {
+        if (type && type.startsWith("text/")) return true;
+        const ext = (name.split(".").pop() || "").toLowerCase();
+        return ["txt","md","json","csv","tsv","js","ts","py","java","cpp","c","h","hpp","html","css","xml","yml","yaml","toml","ini","log"].includes(ext);
+      }
+
+      function readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(String(r.result || ""));
+          r.onerror = reject;
+          r.readAsText(file);
+        });
+      }
+
+      function renderAttachmentRow() {
+        attachmentRowEl.innerHTML = "";
+        if (!pendingAttachments.length) return;
+
+        for (const a of pendingAttachments) {
+          const chip = document.createElement("div");
+          chip.className = "flex items-center gap-2 rounded-full bg-white/70 border border-black/10 px-3 py-1.5 text-xs text-black/70";
+          chip.innerHTML = `
+            <span class="truncate max-w-[240px]">${a.name}</span>
+            <span class="text-black/40">${a.sizeLabel || ""}</span>
+            <button type="button" class="ml-1 text-black/40 hover:text-black/70" aria-label="Remove">✕</button>
+          `;
+          chip.querySelector("button").addEventListener("click", () => {
+            pendingAttachments = pendingAttachments.filter(x => x.id !== a.id);
+            renderAttachmentRow();
+          });
+          attachmentRowEl.appendChild(chip);
+        }
+      }
+
+      function buildAttachmentAppendix() {
+        if (!pendingAttachments.length) return "";
+
+        const lines = [];
+        lines.push("");
+        lines.push("[Attachments]");
+        for (const a of pendingAttachments) {
+          lines.push(`- ${a.name} (${a.type || "unknown"}, ${a.sizeLabel || ""})`);
+          if (a.textContent) {
+            const clipped = a.textContent.length > 8000 ? a.textContent.slice(0, 8000) + "\n…(truncated)" : a.textContent;
+            lines.push("```");
+            lines.push(clipped);
+            lines.push("```");
+          }
+        }
+        return lines.join("\n");
+      }
+
+      attachBtnEl?.addEventListener("click", () => fileInputEl?.click());
+
+      fileInputEl?.addEventListener("change", async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (!files.length) return;
+
+        for (const file of files) {
+          const id = crypto?.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+          const att = {
+            id,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            sizeLabel: formatBytes(file.size),
+            textContent: null,
+          };
+
+          // Only load text-like files & keep it small (avoid blowing up request body)
+          try {
+            if (isProbablyText(file.type, file.name) && file.size <= 200_000) {
+              att.textContent = await readFileAsText(file);
+            }
+          } catch {}
+
+          pendingAttachments.push(att);
+        }
+
+        // reset input so selecting the same file again works
+        fileInputEl.value = "";
+        renderAttachmentRow();
+      });
+
+      // ----------------------------
+      // Voice input (Web Speech API)
+      // ----------------------------
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      let recognition = null;
+      let isRecording = false;
+
+      function setVoiceUI(recording) {
+        if (!voiceBtnEl) return;
+        voiceBtnEl.classList.toggle("bg-black/5", recording);
+        voiceBtnEl.title = recording ? "Stop recording" : "Voice input";
+      }
+
+      if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = navigator.language || "en-US";
+
+        recognition.onresult = (event) => {
+          let interim = "";
+          let finalText = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const r = event.results[i];
+            if (r.isFinal) finalText += r[0].transcript;
+            else interim += r[0].transcript;
+          }
+          const base = chatInputEl.value;
+          chatInputEl.value = (base + " " + (finalText || interim)).replace(/\s+/g, " ").trimStart();
+          autoGrowTextarea(chatInputEl);
+        };
+
+        recognition.onend = () => {
+          isRecording = false;
+          setVoiceUI(false);
+        };
+
+        voiceBtnEl?.addEventListener("click", () => {
+          if (!recognition) return;
+          if (isRecording) {
+            recognition.stop();
+            return;
+          }
+          try {
+            isRecording = true;
+            setVoiceUI(true);
+            recognition.start();
+          } catch {
+            isRecording = false;
+            setVoiceUI(false);
+          }
+        });
+      } else {
+        // hide button if unsupported
+        voiceBtnEl?.classList.add("hidden");
+      }
+
+// ----------------------------
+      // Search toggle behaves like Manus "搜索" (search chats)
+      // ----------------------------
+      let searchOpen = false;
+      function toggleSearch(force) {
+        searchOpen = typeof force === "boolean" ? force : !searchOpen;
+        searchRowEl.classList.toggle("hidden", !searchOpen);
+        if (searchOpen) {
+          searchInputEl.focus();
+          searchToggleBtn.classList.add("bg-black/5");
+        } else {
+          searchInputEl.value = "";
+          searchToggleBtn.classList.remove("bg-black/5");
+        }
+        renderChatList();
+      }
+
+      searchToggleBtn.addEventListener("click", () => toggleSearch());
+      searchClearBtn.addEventListener("click", () => {
+        searchInputEl.value = "";
+        searchInputEl.focus();
+        renderChatList();
+      });
+      searchInputEl.addEventListener("input", renderChatList);
+
+      // ----------------------------
+      // Chat list + context menu (ChatGPT-like)
+      // ----------------------------
+      function openCtxMenu(chatId, anchorEl) {
+        ctxTargetChatId = chatId;
+        const rect = anchorEl.getBoundingClientRect();
+        ctxMenu.classList.remove("hidden");
+
+        // position to the right of the list item, like ChatGPT
+        const menu = ctxMenu.firstElementChild;
+        const menuW = 220;
+        const x = Math.min(rect.right + 10, window.innerWidth - menuW - 12);
+        const y = Math.min(rect.top, window.innerHeight - menu.offsetHeight - 12);
+
+        ctxMenu.style.left = x + "px";
+        ctxMenu.style.top = y + "px";
+      }
+
+      function closeCtxMenu() {
+        ctxMenu.classList.add("hidden");
+        ctxTargetChatId = null;
+      }
+
+      document.addEventListener("click", (e) => {
+        if (!ctxMenu.classList.contains("hidden")) {
+          const inside = ctxMenu.contains(e.target);
+          const isEllipsis = e.target.closest("[data-ellipsis]");
+          if (!inside && !isEllipsis) closeCtxMenu();
+        }
+      });
+
+      // Context menu actions (robust bindings)
+      const ctxShareBtn = ctxMenu.querySelector('[data-action="share"]');
+      const ctxRenameBtn = ctxMenu.querySelector('[data-action="rename"]');
+      const ctxDeleteBtn = ctxMenu.querySelector('[data-action="delete"]');
+
+      ctxShareBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!ctxTargetChatId) return;
+        const id = ctxTargetChatId;
+        closeCtxMenu();
+        await shareChat(id);
+      });
+
+      ctxRenameBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!ctxTargetChatId) return;
+        const id = ctxTargetChatId;
+        closeCtxMenu();
+        renameChat(id);
+      });
+
+      ctxDeleteBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!ctxTargetChatId) return;
+        const id = ctxTargetChatId;
+        closeCtxMenu();
+        deleteChat(id);
+      });
+
+      function renderChatList() {
+        const q = (searchInputEl?.value || "").trim().toLowerCase();
+        const items = chats
+          .slice()
+          .sort((a,b) => b.createdAt - a.createdAt)
+          .filter(c => !q || c.title.toLowerCase().includes(q));
+
+        // pill count
+        chatCountPill.classList.toggle("hidden", items.length === 0);
+        chatCountPill.textContent = String(items.length);
+
+        chatListEl.innerHTML = "";
+        for (const c of items) {
+          const row = document.createElement("div");
+          row.className =
+            "group relative rounded-xl px-3 py-2.5 mx-1 cursor-pointer " +
+            (c.id === selectedChatId ? "bg-black/5" : "hover:bg-black/5");
+
+          // title
+          const title = document.createElement("div");
+          title.className = "text-sm text-black/80 truncate pr-10";
+          title.textContent = c.title || "Untitled";
+
+          // ellipsis
+          const ell = document.createElement("button");
+          ell.type = "button";
+          ell.setAttribute("data-ellipsis", "1");
+          ell.className =
+            "absolute right-2 top-1/2 -translate-y-1/2 icon-btn !p-1.5 opacity-0 group-hover:opacity-100 transition";
+          ell.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm0 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm0 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" fill="#111827"/>
+            </svg>
+          `;
+
+          ell.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openCtxMenu(c.id, ell);
+          });
+
+          row.appendChild(title);
+          row.appendChild(ell);
+
+          row.addEventListener("click", () => {
+            selectedChatId = c.id;
+            persist();
+            renderAll();
+          });
+
+          chatListEl.appendChild(row);
+        }
+      }
+
+      function renameChat(chatId) {
+        const c = chats.find(x => x.id === chatId);
+        if (!c) return;
+        const next = prompt("Rename Chat：", c.title || "");
+        if (next === null) return;
+        c.title = (next || "").trim() || "Untitled";
+        persist();
+        renderChatList();
+      }
+
+      function deleteChat(chatId) {
+        const c = chats.find(x => x.id === chatId);
+        if (!c) return;
+        const ok = confirm("Delete this chat? This action can not be reversed.");
+        if (!ok) return;
+        chats = chats.filter(x => x.id !== chatId);
+        if (selectedChatId === chatId) {
+          selectedChatId = chats[0]?.id || null;
+        }
+        if (!selectedChatId) {
+          const n = createChat("Unclear Input or Typo");
+          chats = [n];
+          selectedChatId = n.id;
+        }
+        persist();
+        renderAll();
+      }
+
+      // ----------------------------
+      // Share (top right + context menu)
+      // ----------------------------
+      async function shareChat(chatId) {
+        const c = chats.find(x => x.id === chatId);
+        if (!c) return;
+
+        // Build a shareable link containing chat id
+        const url = new URL(window.location.href);
+        url.searchParams.set("chat", chatId);
+
+        // Try Web Share API first
+        try {
+          if (navigator.share) {
+            await navigator.share({ title: c.title || "Eunoia Chat", url: url.toString() });
+            showToast("Shared");
+            return;
+          }
+        } catch {}
+
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(url.toString());
+          showToast("Link copied");
+        } catch {
+          // last resort
+          prompt("Copying link：", url.toString());
+        }
+      }
+
+      topShareBtn.addEventListener("click", async () => {
+        const c = getSelectedChat();
+        await shareChat(c.id);
+      });
+
+      // If URL has ?chat=..., select it
+      function applyChatFromUrl() {
+        const url = new URL(window.location.href);
+        const chatId = url.searchParams.get("chat");
+        if (!chatId) return;
+        const exists = chats.some(c => c.id === chatId);
+        if (exists) {
+          selectedChatId = chatId;
+          persist();
+        } else {
+          // If not found, ignore
+        }
+      }
+
+      // ----------------------------
+      // Messages render (borderless)
+      // ----------------------------
+      function renderMessages() {
+        const chat = getSelectedChat();
+        const msgs = chat?.messages || [];
+
+        emptyStateEl.classList.toggle("hidden", msgs.length > 0);
+        chatMessagesEl.innerHTML = "";
+
+        for (const m of msgs) {
+          const block = document.createElement("div");
+          block.className = "space-y-2";
+
+          const header = document.createElement("div");
+          header.className = "flex items-center gap-2 text-xs text-black/45 font-semibold";
+          header.innerHTML = m.role === "user"
+            ? `<span class="inline-flex items-center gap-2">
+                <span class="h-5 w-5 rounded-full bg-black/10 grid place-items-center">U</span>
+                <span>User</span>
+              </span>`
+            : `<span class="inline-flex items-center gap-2">
+                <span class="h-5 w-5 rounded-full bg-black/10 grid place-items-center">E</span>
+                <span>Eunoia</span>
+              </span>`;
+
+          const body = document.createElement("div");
+
+          if (m.role === "assistant") {
+            // Remove whitespace-pre-wrap so Markdown can lay out properly
+            body.className = "text-sm md:text-[15px] leading-7 text-black/75";
+            body.innerHTML = renderMarkdown(m.text);
+          } else {
+            // Keep user messages as plaintext
+            body.className = "text-sm md:text-[15px] leading-7 text-black/75 whitespace-pre-wrap";
+            body.textContent = m.text;
+          }
+
+          block.appendChild(header);
+          block.appendChild(body);
+          chatMessagesEl.appendChild(block);
+        }
+      }
+
+      // ----------------------------
+      // Suggestion prompts
+      // ----------------------------
+      const EXAMPLE_PROMPTS = [
+        { label: "📚 CS PhD · NLP / LLMs", text: "I'm applying for a CS PhD in the US. Interests: NLP and large language models (alignment, instruction tuning). Background: transformer fine-tuning, some RL. Suggest matching labs and advisors and explain fit." },
+        { label: "✏️ HCI · User Studies", text: "I'm applying for a CS PhD. Interests: HCI and accessibility. Background: 2 user-study projects. Find labs/advisors and tell me what to emphasize in my SOP." },
+        { label: "🧠 CV + Robotics", text: "I'm interested in vision-language models for robotics manipulation. Background: computer vision, ROS, some RL. Target: US and Canada. Suggest programs, labs, and advisors." },
+        { label: "🧰 Not sure yet", text: "I'm interested in deep learning but not sure which subfield fits me best. Ask me a few clarifying questions, then suggest possible research directions and matching labs." },
+      ];
+
+      function renderExamplePrompts() {
+        const wrap = document.getElementById("examplePrompts");
+        wrap.innerHTML = "";
+        for (const ex of EXAMPLE_PROMPTS) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className =
+            "rounded-full bg-white/60 hover:bg-white/80 backdrop-blur px-3 py-1.5 text-xs text-black/70 transition";
+          btn.textContent = ex.label;
+          btn.addEventListener("click", () => {
+            if (chatInputEl.disabled) return;
+            chatInputEl.value = ex.text;
+            autoGrowTextarea(chatInputEl);
+            chatInputEl.focus();
+          });
+          wrap.appendChild(btn);
+        }
+      }
+
+      // ----------------------------
+      // Streaming logic (reuses your backend /api/chat/stream)
+      // ----------------------------
+      const STORAGE_KEY = "eunoia_prev_response_id";
+      let previousResponseId = localStorage.getItem(STORAGE_KEY) || null;
+
+      function sseParse(bufferChunk, onEvent) {
+        let buffer = bufferChunk;
+        let idx;
+        while ((idx = buffer.indexOf("\n\n")) !== -1) {
+          const raw = buffer.slice(0, idx);
+          buffer = buffer.slice(idx + 2);
+
+          let event = "message";
+          let dataLines = [];
+          for (const line of raw.split("\n")) {
+            if (line.startsWith("event:")) event = line.slice(6).trim();
+            if (line.startsWith("data:")) dataLines.push(line.slice(5));
+          }
+          onEvent(event, dataLines.join("\n"));
+        }
+        return buffer;
+      }
+
+      async function sendToBackendStream(message, onDelta) {
+        const res = await fetch("/api/chat/stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message, previous_response_id: previousResponseId }),
+        });
+        if (!res.ok || !res.body) throw new Error("Streaming request failed");
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+        let text = "";
+        let nextResponseId = null;
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          buffer = sseParse(buffer, (event, data) => {
+            if (event === "delta") {
+              text += data;
+              onDelta(text);
+            } else if (event === "meta" || event === "done") {
+              try {
+                const obj = JSON.parse(data);
+                if (obj.response_id) nextResponseId = obj.response_id;
+              } catch {}
+            } else if (event === "error") {
+              // keep going, but flag
+            }
+          });
+        }
+        return nextResponseId;
+      }
+
+      function resetChat() {
+        const chat = getSelectedChat();
+        chat.messages = [];
+        previousResponseId = null;
+        localStorage.removeItem(STORAGE_KEY);
+        persist();
+        renderMessages();
+        renderExamplePrompts();
+        emptyStateEl.classList.remove("hidden");
+      }
+
+      function createNewChatLikeChatGPT() {
+        const c = createChat("Unclear Input or Typo");
+        chats.push(c);
+        selectedChatId = c.id;
+        previousResponseId = null;
+        localStorage.removeItem(STORAGE_KEY);
+        persist();
+        renderAll();
+        chatInputEl.focus();
+      }
+
+      newTaskBtn.addEventListener("click", createNewChatLikeChatGPT);
+      chatResetEl.addEventListener("click", resetChat);
+
+      chatInputEl.addEventListener("input", () => autoGrowTextarea(chatInputEl));
+
+      chatFormEl.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const message = (chatInputEl.value || "").trim();
+        const attachmentAppendix = buildAttachmentAppendix();
+        const composedMessage = message + attachmentAppendix;
+        if (!message) return;
+
+        const chat = getSelectedChat();
+
+        // Auto-title chat if it's still default and first message
+        if ((chat.title === "Unclear Input or Typo" || !chat.title) && chat.messages.length === 0) {
+          chat.title = message.slice(0, 28) + (message.length > 28 ? "…" : "");
+        }
+
+        // Add user message
+        chat.messages.push({ role: "user", text: message + (pendingAttachments.length ? "\n\n[Attachments: " + pendingAttachments.map(a => a.name).join(", ") + "]" : ""), ts: Date.now() });
+        chatInputEl.value = "";
+        pendingAttachments = [];
+        renderAttachmentRow();
+        autoGrowTextarea(chatInputEl);
+
+        // Add assistant placeholder (updated by stream)
+        const assistantMsg = { role: "assistant", text: "", ts: Date.now() };
+        chat.messages.push(assistantMsg);
+
+        persist();
+        renderChatList();
+        renderMessages();
+
+        setBusy(true);
+        try {
+          const rid = await sendToBackendStream(composedMessage, (fullText) => {
+            assistantMsg.text = fullText;
+            renderMessages();
+            // keep scroll near bottom
+            window.requestAnimationFrame(() => {
+              window.scrollTo(0, document.body.scrollHeight);
+            });
+          });
+
+          if (rid) {
+            previousResponseId = rid;
+            localStorage.setItem(STORAGE_KEY, previousResponseId);
+          }
+        } catch (err) {
+          assistantMsg.text = "抱歉，流式请求失败。请检查服务器日志。";
+          console.error(err);
+          persist();
+          renderMessages();
+        } finally {
+          setBusy(false);
+          chatInputEl.focus();
+        }
+      });
+
+      // ----------------------------
+      // Render all
+      // ----------------------------
+      function renderAll() {
+        renderChatList();
+        renderMessages();
+        renderExamplePrompts();
+      }
+
+      // init
+      loadState();
+      applyChatFromUrl();
+      renderAll();
+      autoGrowTextarea(chatInputEl);
+    </script>
+  </body>
+</html>

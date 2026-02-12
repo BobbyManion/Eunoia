@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eunoia — Find the right grad program & advisor, faster</title>
+    <meta
+      name="description"
+      content="Eunoia uses AI to simplify and optimize the graduate school application process—discover programs, labs, advisors, and recent publications in one place."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Eunoia — Find the right grad program & advisor, faster" />
+    <meta
+      property="og:description"
+      content="AI-powered grad school search: programs, labs, advisors, and papers—explained in plain language."
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Tailwind (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            boxShadow: {
+              soft: "0 10px 30px rgba(0,0,0,0.08)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Subtle background */
+      .bg-grid {
+        background-image:
+          radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.08) 1px, transparent 0);
+        background-size: 28px 28px;
+      }
+
+      /* Anchor links: keep section cards from hiding under the sticky header */
+      section[id] {
+        scroll-margin-top: 60px; /* tweak: 64px tighter, 96px looser */
+      }
+    </style>
+    </style>
+  </head>
+
+  <body class="bg-slate-50 text-slate-900">
+    <!-- Top Bar -->
+    <header class="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-slate-200">
+      <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2 font-semibold">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-white">E</span>
+          <span>Eunoia</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm text-slate-600">
+                    <a class="hover:text-slate-900" href="#demo">Demo</a>
+<a class="hover:text-slate-900" href="#how">How it works</a>
+          <a class="hover:text-slate-900" href="#value">Why Eunoia</a>
+          <a class="hover:text-slate-900" href="#pricing">Pricing</a>
+          <a class="hover:text-slate-900" href="#faq">FAQ</a>
+        </nav>
+        <div class="flex items-center gap-2">
+          <a
+            href="#waitlist"
+            class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+          >
+            Get early access
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="bg-grid">
+      <div class="mx-auto max-w-6xl px-4 pt-14 pb-10">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <p class="inline-flex items-center gap-2 rounded-full bg-white border border-slate-200 px-3 py-1 text-xs text-slate-700 shadow-sm">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              AI-powered grad school search & fit analysis
+            </p>
+
+            <h1 class="mt-5 text-4xl md:text-5xl font-bold tracking-tight">
+              Find the right grad programs, labs, and advisors—without weeks of tab-hopping.
+            </h1>
+            <p class="mt-5 text-lg text-slate-600 leading-relaxed">
+              Eunoia simplifies and optimizes the graduate school application process with AI—bringing distributed lab info and recent publications into one place, and explaining fit in plain language.
+            </p>
+
+            <div class="mt-7 flex flex-col sm:flex-row gap-3">
+              <a
+                href="#demo"
+                class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 shadow-soft"
+              >
+                See demo
+              </a>
+              <a
+                href="#how"
+                class="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 border border-slate-200 hover:bg-slate-50"
+              >
+                See how it works
+              </a>
+            </div>
+
+            <div class="mt-6 text-sm text-slate-500">
+              Built by two graduate students (UW & CMU). 
+            </div>
+          </div>
+
+          <!-- Mock UI Card -->
+          <div class="relative">
+            <div class="rounded-3xl bg-white border border-slate-200 p-6 shadow-soft">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-semibold text-slate-900">Eunoia (preview)</div>
+              </div>
+
+              <div class="mt-5 space-y-3">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs font-semibold text-slate-700">You</div>
+                  <div class="mt-1 text-sm text-slate-700">
+                    “I’m interested in HCI and want labs publishing strong work and taking new students.”
+                  </div>
+                </div>
+
+                <div class="rounded-2xl bg-white border border-slate-200 p-4">
+                  <div class="text-xs font-semibold text-slate-700">Eunoia</div>
+                  <div class="mt-1 text-sm text-slate-700">
+                    Here are programs + labs aligned with your interests, with recent publications and a
+                    plain-English explanation of why you fit.
+                  </div>
+                  <div class="mt-3 grid sm:grid-cols-2 gap-3">
+                    <div class="rounded-xl bg-slate-50 border border-slate-200 p-3">
+                      <div class="text-xs font-semibold">Lab match</div>
+                      <div class="text-sm text-slate-600">HCI · Mixed methods · Systems</div>
+                    </div>
+                    <div class="rounded-xl bg-slate-50 border border-slate-200 p-3">
+                      <div class="text-xs font-semibold">Recent papers</div>
+                      <div class="text-sm text-slate-600">Summaries + “how to cite in SOP”</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-xs text-slate-500">
+                  Natural-language interface + robust data aggregation from academic sites. 
+                </div>
+              </div>
+            </div>
+
+            <div class="absolute -z-10 -inset-4 rounded-[2.2rem] bg-gradient-to-r from-slate-200 to-slate-100 blur-2xl opacity-70"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Embedded Demo -->
+<section id="demo" class="mx-auto max-w-6xl px-4 py-12">
+  <div class="rounded-3xl bg-white border border-slate-200 p-6 md:p-8 shadow-soft">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Demo</h2>
+        <p class="mt-2 text-slate-600">
+          Ask about programs, labs, advisors, and how your background fits.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          id="chatReset"
+          type="button"
+          class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 border border-slate-200 hover:bg-slate-50"
+          title="Clear the chat"
+        >
+          Reset
+        </button>
+      </div>
+    </div>
+    <!-- Fake reset progress -->
+    <div id="resetProgressWrap" class="hidden mt-3 w-full">
+      <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+        <div
+          id="resetProgressBar"
+          class="h-full w-0 bg-slate-900 transition-all duration-700 ease-out"
+        ></div>
+      </div>
+      <div class="mt-1 text-xs text-slate-500">Resetting…</div>
+    </div>
+
+    <div
+      id="chatMessages"
+      class="mt-6 h-[360px] md:h-[420px] overflow-y-auto rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-3"
+    >
+      <!-- Messages injected by JS -->
+    </div>
+
+    <form id="chatForm" class="mt-4 flex gap-2 items-end">
+      <label class="flex-1 block">
+        <span class="sr-only">Message</span>
+        <textarea
+          id="chatInput"
+          rows="2"
+          class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300 resize-none"
+          placeholder="e.g., I’m interested in HCI + systems. I have 2 years of research in usability studies..."
+          required
+        ></textarea>
+        <div class="mt-3">
+          <div class="text-xs text-slate-500 mb-2">Try an example:</div>
+          <div id="examplePrompts" class="flex flex-wrap gap-2"></div>
+        </div>
+      </label>
+
+      <button
+        id="chatSend"
+        type="submit"
+        class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 shadow-soft"
+      >
+        Send
+      </button>
+    </form>
+
+  </div>
+</section>
+
+    <!-- How it works -->
+    <section id="how" class="mx-auto max-w-6xl px-4 py-14">
+      <div class="flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <h2 class="text-3xl font-bold tracking-tight">How Eunoia works</h2>
+          <p class="mt-2 text-slate-600">
+            Two layers of AI: an intuitive interface, backed by a robust, continuously updated knowledge base.
+
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-6">
+        <div class="rounded-3xl bg-white border border-slate-200 p-7 shadow-sm">
+          <h3 class="text-lg font-semibold">AI as the interface</h3>
+          <p class="mt-2 text-slate-600">
+            Use natural language to describe interests and constraints—even fuzzy ones. Eunoia understands and responds like a conversation.
+
+          </p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
+            <li>Ask: “Find labs doing X + taking students”</li>
+            <li>Get: shortlists with reasons and links</li>
+            <li>Refine: “More interdisciplinary, less theory”</li>
+          </ul>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-slate-200 p-7 shadow-sm">
+          <h3 class="text-lg font-semibold">AI as the database</h3>
+          <p class="mt-2 text-slate-600">
+            Eunoia aggregates and interprets info from diverse academic websites and databases, staying robust to messy, unconventional pages.
+
+          </p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
+            <li>Unifies lab pages, advisor profiles, and publication lists</li>
+            <li>Surfaces “latest work” and themes</li>
+            <li>Produces fit explanations you can use in SOP drafts</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Value -->
+    <section id="value" class="mx-auto max-w-6xl px-4 pb-14">
+      <div class="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
+        <h2 class="text-3xl font-bold tracking-tight">Why Eunoia</h2>
+        <div class="mt-3 grid lg:grid-cols-3 gap-6">
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+            <h3 class="font-semibold">Stop missing great advisors</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Lab info is scattered across institutional and personal pages, and tags like “HCI” can be too coarse for multidisciplinary work.
+
+            </p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+            <h3 class="font-semibold">Go from “interest” to “fit”</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Eunoia helps you connect your background to a lab’s specific papers, methods, and direction—so your application shows familiarity.
+
+            </p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+            <h3 class="font-semibold">Save serious time</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Applicants often need ~2 labs per school—quickly becoming ~20 labs to research. Eunoia consolidates and explains it fast.
+
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="mx-auto max-w-6xl px-4 pb-14">
+      <div class="flex items-end justify-between flex-wrap gap-6">
+        <div>
+          <h2 class="text-3xl font-bold tracking-tight">Pricing</h2>
+          <p class="mt-2 text-slate-600">
+            We’ll start by ensuring costs are covered (COG baseline) and then optimize price via A/B testing.
+
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-8 grid md:grid-cols-3 gap-6">
+        <div class="rounded-3xl bg-white border border-slate-200 p-7 shadow-sm">
+          <div class="text-sm font-semibold text-slate-900">Free</div>
+          <div class="mt-2 text-3xl font-bold">$0</div>
+          <p class="mt-2 text-sm text-slate-600">Explore programs and basic lab discovery.</p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
+            <li>Natural-language search</li>
+            <li>Program overviews</li>
+            <li>Limited lab cards</li>
+          </ul>
+
+        </div>
+
+        <div class="rounded-3xl bg-slate-900 text-white p-7 shadow-soft">
+          <div class="text-sm font-semibold text-white/90">Plus</div>
+          <div class="mt-2 text-3xl font-bold">$TBD</div>
+          <p class="mt-2 text-sm text-white/80">Shortlists, fit explanations, and publication summaries.</p>
+          <ul class="mt-4 space-y-2 text-sm text-white/90 list-disc pl-5">
+            <li>Deep lab/advisor matching</li>
+            <li>Recent publications + themes</li>
+            <li>Fit explanations for SOP</li>
+          </ul>
+
+        </div>
+
+        <div class="rounded-3xl bg-white border border-slate-200 p-7 shadow-sm">
+          <div class="text-sm font-semibold text-slate-900">Campus</div>
+          <div class="mt-2 text-3xl font-bold">Contact</div>
+          <p class="mt-2 text-sm text-slate-600">Partner with universities and departments.</p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
+            <li>Department-wide access</li>
+            <li>Specialty cohorts (e.g., CV)</li>
+            <li>Feedback + iteration loops</li>
+          </ul>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Go-to-market -->
+    <section class="mx-auto max-w-6xl px-4 pb-14">
+      <div class="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
+        <h2 class="text-2xl font-bold tracking-tight">How we’re launching</h2>
+        <p class="mt-2 text-slate-600">
+          We’ll start with universities and specific majors (initially a specialized niche like computer vision), prioritize product-market fit,
+          then expand to more subjects. 
+        </p>
+      </div>
+    </section>
+
+    <!-- Waitlist -->
+    <section id="waitlist" class="mx-auto max-w-6xl px-4 pb-16">
+      <div class="rounded-3xl bg-white border border-slate-200 p-8 shadow-soft">
+        <div class="grid lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <h2 class="text-3xl font-bold tracking-tight">Join the waitlist</h2>
+            <p class="mt-2 text-slate-600">
+              Tell us your area of interest and we’ll invite you as soon as your cohort opens.
+            </p>
+            <div class="mt-4 text-sm text-slate-500">
+              Tip: Start with your intended area (e.g., HCI, CV, Security) and desired degree.
+            </div>
+          </div>
+
+          <form class="space-y-3" onsubmit="return handleWaitlistSubmit(event)">
+            <div class="grid sm:grid-cols-2 gap-3">
+              <label class="block">
+                <span class="text-sm font-medium text-slate-700">Name</span>
+                <input
+                  required
+                  name="name"
+                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+                  placeholder="Jane Doe"
+                />
+              </label>
+              <label class="block">
+                <span class="text-sm font-medium text-slate-700">Email</span>
+                <input
+                  required
+                  type="email"
+                  name="email"
+                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+                  placeholder="jane@school.edu"
+                />
+              </label>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-3">
+              <label class="block">
+                <span class="text-sm font-medium text-slate-700">Interest area</span>
+                <input
+                  name="interest"
+                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+                  placeholder="HCI, CV, Security…"
+                />
+              </label>
+              <label class="block">
+                <span class="text-sm font-medium text-slate-700">Degree</span>
+                <select
+                  name="degree"
+                  class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+                >
+                  <option>MS</option>
+                  <option>PhD</option>
+                  <option>MS/PhD</option>
+                  <option>Not sure yet</option>
+                </select>
+              </label>
+            </div>
+
+            <button
+              class="w-full rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+              type="submit"
+            >
+              Request access
+            </button>
+
+            <p id="waitlistStatus" class="text-sm text-slate-600"></p>
+
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="mx-auto max-w-6xl px-4 pb-16">
+      <div class="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
+        <h2 class="text-3xl font-bold tracking-tight">FAQ</h2>
+        <div class="mt-6 grid md:grid-cols-2 gap-6">
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+            <h3 class="font-semibold">What makes Eunoia different from normal search?</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Instead of relying on coarse tags, Eunoia can interpret distributed lab info and answer fuzzy queries conversationally.
+            </p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+            <h3 class="font-semibold">Can it help me write my SOP?</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              It’s built to surface specific papers/methods and explain fit—so you can write with genuine lab familiarity.
+            </p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+            <h3 class="font-semibold">Where are you starting?</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              We’ll begin with universities and a specialized niche (e.g., computer vision) to get strong feedback and product-market fit.
+
+            </p>
+          </div>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+            <h3 class="font-semibold">When will pricing be finalized?</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              We’ll price sustainably from cost-of-goods baseline, then A/B test to find the best value point.
+
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-10 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <div class="text-sm text-slate-600">
+          <span class="font-semibold text-slate-900">Eunoia</span> — AI for grad school search & fit 
+
+          <div class="mt-4 text-sm text-slate-500">
+              Made for applicants who want to do research. Eunoia helps you discover labs you’d otherwise miss, then get specific about papers and methods—so your SOP shows real fit.
+          </div>
+
+        </div>
+        <div class="text-sm text-slate-600 flex gap-5">
+          <a class="hover:text-slate-900" href="#how">How it works</a>
+          <a class="hover:text-slate-900" href="#pricing">Pricing</a>
+          <a class="hover:text-slate-900" href="#waitlist">Waitlist</a>
+          <a
+          class="hover:text-slate-900"
+          href="/Eunoia Business Proposal.pdf"
+          target="_blank"
+          rel="noopener"
+        >
+          Business proposal
+        </a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function handleWaitlistSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = Object.fromEntries(new FormData(form).entries());
+
+        // Demo behavior: store locally + show message.
+        // Replace with a real POST to your backend / Formspree / Airtable / etc.
+        const key = "eunoia_waitlist";
+        const existing = JSON.parse(localStorage.getItem(key) || "[]");
+        existing.push({ ...data, ts: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(existing));
+
+        const el = document.getElementById("waitlistStatus");
+        el.textContent = "Thanks — you’re on the list!";
+        form.reset();
+        return false;
+      }
+    </script>
+  <script>
+
+  const chatMessagesEl = document.getElementById("chatMessages");
+  const chatFormEl = document.getElementById("chatForm");
+  const chatInputEl = document.getElementById("chatInput");
+  const chatResetEl = document.getElementById("chatReset");
+  const chatSendEl = document.getElementById("chatSend");
+
+  // We keep multi-turn context using the previous response id from the Responses API.
+  // Stored locally so refresh keeps the conversation.
+  const STORAGE_KEY = "eunoia_prev_response_id";
+  let previousResponseId = localStorage.getItem(STORAGE_KEY) || null;
+
+  const EXAMPLE_PROMPTS = [
+  {
+    label: "CS PhD · NLP / LLMs",
+    text: "I'm applying for a CS PhD in the US. Interests: NLP and large language models (alignment, instruction tuning). Background: transformer fine-tuning, some RL. Suggest matching labs and advisors and explain fit."
+  },
+  {
+    label: "HCI · User Studies",
+    text: "I'm applying for a CS PhD. Interests: HCI and accessibility. Background: 2 user-study projects. Find labs/advisors and tell me what to emphasize in my SOP."
+  },
+  {
+    label: "ML Systems · Efficiency",
+    text: "I'm interested in ML systems for efficient training and inference (quantization, distillation, distributed systems). Background: CUDA and distributed training. Recommend labs and key skills to highlight."
+  },
+  {
+    label: "CV + Robotics",
+    text: "I'm interested in vision-language models for robotics manipulation. Background: computer vision, ROS, some RL. Target: US and Canada. Suggest programs, labs, and advisors."
+  },
+  {
+    label: "Not sure yet",
+    text: "I'm interested in deep learning but not sure which subfield fits me best. Ask me a few clarifying questions, then suggest possible research directions and matching labs."
+  },
+  {
+    label: "School shortlist",
+    text: "Profile: GPA 3.6, one arXiv NLP paper, strong engineering, weaker theory. Help me shortlist CS PhD programs and explain why each is a good fit."
+  },
+  ];
+
+  function renderExamplePrompts() {
+    const wrap = document.getElementById("examplePrompts");
+    if (!wrap) return;
+
+    wrap.innerHTML = "";
+    for (const ex of EXAMPLE_PROMPTS) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className =
+        "rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 " +
+        "active:scale-[0.99] transition shadow-sm";
+      btn.textContent = ex.label;
+      btn.setAttribute("aria-label", `Use example: ${ex.label}`);
+
+      btn.addEventListener("click", () => {
+        // Prevent clicks while generating (works if you disable input/button during streaming)
+        if (chatInputEl?.disabled) return;
+
+        chatInputEl.value = ex.text;
+        chatInputEl.focus();
+
+      });
+
+      wrap.appendChild(btn);
+    }
+  }
+
+  renderExamplePrompts();
+
+  function escapeHtml(s) {
+    return s
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function addMessage(role, text) {
+    const wrapper = document.createElement("div");
+    const isUser = role === "user";
+
+    wrapper.className = "flex " + (isUser ? "justify-end" : "justify-start");
+
+    const bubble = document.createElement("div");
+    bubble.className =
+      "max-w-[85%] rounded-2xl border border-slate-200 px-4 py-3 text-sm leading-relaxed " +
+      (isUser ? "bg-white" : "bg-white");
+
+    const meta = document.createElement("div");
+    meta.className = "text-[11px] font-semibold text-slate-600 mb-1";
+    meta.textContent = isUser ? "You" : "Eunoia";
+
+    const body = document.createElement("div");
+    body.className = "text-slate-800 whitespace-pre-wrap";
+    body.innerHTML = escapeHtml(text);
+
+    bubble.appendChild(meta);
+    bubble.appendChild(body);
+    wrapper.appendChild(bubble);
+
+    chatMessagesEl.appendChild(wrapper);
+    chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+
+    return body; // allow live updates
+  }
+
+  function setBusy(isBusy) {
+    chatSendEl.disabled = isBusy;
+    chatInputEl.disabled = isBusy;
+    chatSendEl.classList.toggle("opacity-60", isBusy);
+    chatSendEl.classList.toggle("cursor-not-allowed", isBusy);
+  }
+
+  function resetChat() {
+    chatMessagesEl.innerHTML = "";
+    previousResponseId = null;
+    localStorage.removeItem(STORAGE_KEY);
+    addMessage("assistant", "Hi! Tell me your interests (area, methods, constraints) and I’ll suggest programs/labs/advisors and explain fit.");
+    renderExamplePrompts()
+  }
+
+  const resetProgressWrap = document.getElementById("resetProgressWrap");
+  const resetProgressBar = document.getElementById("resetProgressBar");
+
+  const FAKE_RESET_MS = 650;
+
+  function resetChatWithProgress() {
+    // Prevent double clicks
+    if (chatResetEl.disabled) return;
+
+    // Show progress UI
+    if (resetProgressWrap && resetProgressBar) {
+      resetProgressWrap.classList.remove("hidden");
+      resetProgressBar.style.width = "0%";
+
+      // force reflow so the transition always runs
+      resetProgressBar.offsetHeight;
+
+      resetProgressBar.style.width = "100%";
+    }
+
+    // Disable controls during fake reset
+    setBusy(true);
+
+    // Perform actual reset near the end of the animation
+    setTimeout(() => {
+      resetChat();
+    }, FAKE_RESET_MS - 80);
+
+    // Hide progress + re‑enable controls
+    setTimeout(() => {
+      if (resetProgressWrap) resetProgressWrap.classList.add("hidden");
+      if (resetProgressBar) resetProgressBar.style.width = "0%";
+      setBusy(false);
+    }, FAKE_RESET_MS + 120);
+  }
+
+  // async function sendToBackend(message) {
+  //   const res = await fetch("/api/chat", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       message,
+  //       previous_response_id: previousResponseId,
+  //     }),
+  //   });
+
+  //   if (!res.ok) {
+  //     const errText = await res.text();
+  //     throw new Error(errText || "Request failed");
+  //   }
+  //   return res.json();
+  // }
+
+  async function sendToBackendStream(message, assistantBodyEl) {
+    const res = await fetch("/api/chat/stream", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        previous_response_id: previousResponseId,
+      }),
+    });
+
+    if (!res.ok || !res.body) {
+      throw new Error("Streaming request failed");
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    let buffer = "";
+    let text = "";
+    let nextResponseId = null;
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      let idx;
+      while ((idx = buffer.indexOf("\n\n")) !== -1) {
+        const raw = buffer.slice(0, idx);
+        buffer = buffer.slice(idx + 2);
+
+        let event = "message";
+        let dataLines = [];
+
+        for (const line of raw.split("\n")) {
+          if (line.startsWith("event:")) event = line.slice(6).trim();
+          if (line.startsWith("data:")) dataLines.push(line.slice(5));
+        }
+
+        const data = dataLines.join("\n");
+
+        if (event === "delta") {
+          text += data;
+          assistantBodyEl.textContent = text;
+        }
+
+        if (event === "meta") {
+          const obj = JSON.parse(data);
+          if (obj.response_id) nextResponseId = obj.response_id;
+        }
+
+        if (event === "done") {
+          const obj = JSON.parse(data);
+          if (obj.response_id) nextResponseId = obj.response_id;
+        }
+
+        if (event === "error") {
+          assistantBodyEl.textContent += "\n\n[Error streaming response]";
+        }
+      }
+    }
+
+    return nextResponseId;
+  }
+
+chatFormEl.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const message = (chatInputEl.value || "").trim();
+    if (!message) return;
+
+    addMessage("user", message);
+    chatInputEl.value = "";
+
+    // const assistantBodyEl = addMessage("assistant", "…");
+    // setBusy(true);
+
+    // try {
+    //   const data = await sendToBackend(message);
+
+    //   // Backend returns:
+    //   // - data.reply: assistant text
+    //   // - data.response_id: the Response id to pass as previous_response_id next turn
+    //   assistantBodyEl.textContent = (data.reply || "").trim() || "(no text output)";
+    //   if (data.response_id) {
+    //     previousResponseId = data.response_id;
+    //     localStorage.setItem(STORAGE_KEY, previousResponseId);
+    //   }
+    // } catch (err) {
+    //   assistantBodyEl.textContent =
+    //     "Sorry — the embedded demo failed to respond. " +
+    //     "If you're running locally, make sure the backend is running and OPENAI_API_KEY is set.";
+    //   console.error(err);
+    // } finally {
+    //   setBusy(false);
+    //   chatInputEl.focus();
+    // }
+    const assistantBodyEl = addMessage("assistant", "");
+    setBusy(true);
+
+    try {
+      const rid = await sendToBackendStream(message, assistantBodyEl);
+      if (rid) {
+        previousResponseId = rid;
+        localStorage.setItem(STORAGE_KEY, previousResponseId);
+      }
+    } catch (err) {
+      assistantBodyEl.textContent =
+        "Sorry — streaming failed. Check the server.";
+      console.error(err);
+    } finally {
+      setBusy(false);
+      chatInputEl.focus();
+    }
+  });
+
+  chatResetEl.addEventListener("click", resetChatWithProgress);
+
+  // Initialize
+  resetChat();
+</script>
+
+  </body>
+</html>

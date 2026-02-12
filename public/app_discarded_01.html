@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Eunoia App</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            boxShadow: {
+              soft: "0 12px 40px rgba(0,0,0,0.10)",
+            },
+            colors: {
+              paper: "#F6F6F5",
+              ink: "#111827",
+              muted: "#6B7280",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
+
+    <style>
+      /* Markdown typography inside assistant bubbles */
+      .md h1, .md h2, .md h3 { font-weight: 700; margin: 0.6em 0 0.35em; }
+      .md h1 { font-size: 1.4rem; }
+      .md h2 { font-size: 1.25rem; }
+      .md h3 { font-size: 1.1rem; }
+      .md p { margin: 0.55em 0; }
+      .md ul, .md ol { margin: 0.55em 0 0.55em 1.35em; }
+      .md li { margin: 0.25em 0; }
+      .md a { text-decoration: underline; }
+      .md pre { overflow: auto; padding: 0.9rem; border-radius: 0.9rem; background: rgba(17,24,39,0.06); }
+      .md code { background: rgba(17,24,39,0.06); padding: 0.15rem 0.3rem; border-radius: 0.35rem; }
+      .md pre code { background: transparent; padding: 0; }
+      .md blockquote { border-left: 4px solid rgba(17,24,39,0.18); padding-left: 0.9rem; color: rgba(17,24,39,0.75); margin: 0.6em 0; }
+    </style>
+  </head>
+
+  <body class="min-h-screen bg-paper text-ink">
+    <div class="max-w-5xl mx-auto px-5 md:px-7 py-8 md:py-10">
+      <!-- Top bar -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur px-4 py-2 shadow-soft">
+          <span class="font-semibold text-base md:text-lg">Eunoia</span>
+          <span class="text-xs md:text-sm text-muted">app</span>
+        </div>
+        <div class="text-xs md:text-sm text-muted" id="streamingStatus">Streaming enabled</div>
+      </div>
+
+      <!-- Hero -->
+      <div class="text-center mt-6 md:mt-10 mb-8 md:mb-10">
+        <div class="flex items-center justify-center gap-3 mb-3">
+          <div class="h-12 w-12 rounded-2xl bg-white shadow-soft grid place-items-center">
+            <span class="text-xl">🧠</span>
+          </div>
+          <div class="text-2xl md:text-4xl font-semibold">Eunoia <span class="text-muted font-medium">app</span></div>
+        </div>
+        <div class="text-lg md:text-2xl text-ink/70 leading-relaxed">
+          Hi! Tell me your interests (area, methods) and I’ll suggest programs/labs/advisors and explain fit.
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div id="chat" class="space-y-6 md:space-y-8 mb-8 md:mb-10"></div>
+
+      <!-- Composer -->
+      <div class="bg-white/90 backdrop-blur rounded-3xl shadow-soft p-4 md:p-5">
+        <div class="flex items-center gap-3 md:gap-4">
+          <!-- Attach -->
+          <button id="attachBtn"
+            class="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-ink/5 hover:bg-ink/10 active:scale-[0.98] transition grid place-items-center"
+            title="Attach a file or image">
+            <span class="text-2xl leading-none">＋</span>
+          </button>
+          <input id="fileInput" type="file" class="hidden" multiple
+                 accept="image/*,.txt,.md,.json,.csv,.ts,.js,.py,.java,.c,.cpp,.go,.rs,.html,.css,.pdf" />
+
+          <!-- Input -->
+          <div class="flex-1">
+            <textarea id="prompt"
+              class="w-full resize-none rounded-2xl bg-ink/5 px-4 md:px-5 py-3 md:py-4 text-base md:text-lg leading-relaxed outline-none focus:bg-ink/7 min-h-[56px] md:min-h-[64px]"
+              placeholder="Start with your goals..."></textarea>
+
+            <!-- Attachment chips -->
+            <div id="attachmentsRow" class="mt-3 flex flex-wrap gap-2"></div>
+          </div>
+
+          <!-- Voice -->
+          <button id="micBtn"
+            class="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-ink/5 hover:bg-ink/10 active:scale-[0.98] transition grid place-items-center"
+            title="Voice input">
+            <span id="micIcon" class="text-xl">🎙️</span>
+          </button>
+
+          <!-- Send -->
+          <button id="sendBtn"
+            class="h-12 px-5 md:h-14 md:px-6 rounded-2xl bg-ink text-white hover:opacity-90 active:scale-[0.98] transition text-base md:text-lg font-medium">
+            Send
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between mt-3 text-xs md:text-sm text-muted">
+          <button id="resetBtn" class="hover:underline">Reset</button>
+          <div id="hint"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ---------- helpers ----------
+      function escapeHtml(str) {
+        return (str || "").replace(/[&<>"']/g, (m) => ({
+          "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+        }[m]));
+      }
+
+      function renderMarkdown(md) {
+        try {
+          if (window.marked && window.DOMPurify) {
+            marked.setOptions({ gfm: true, breaks: true });
+            const raw = marked.parse(md || "");
+            return DOMPurify.sanitize(raw, { USE_PROFILES: { html: true } });
+          }
+        } catch (e) {}
+        return escapeHtml(md || "").replace(/\n/g, "<br/>");
+      }
+
+      // ---------- state ----------
+      const chatEl = document.getElementById("chat");
+      const promptEl = document.getElementById("prompt");
+      const sendBtn = document.getElementById("sendBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const attachBtn = document.getElementById("attachBtn");
+      const fileInput = document.getElementById("fileInput");
+      const attachmentsRow = document.getElementById("attachmentsRow");
+      const hintEl = document.getElementById("hint");
+      const micBtn = document.getElementById("micBtn");
+      const micIcon = document.getElementById("micIcon");
+
+      let previous_response_id = null;
+
+      /** attachments: {id, name, type, kind, dataUrl?, text?} */
+      let attachments = [];
+
+      const messages = [];
+
+      function addMessage(role, text) {
+        messages.push({ role, text });
+        renderMessages();
+      }
+
+      function renderMessages() {
+        chatEl.innerHTML = "";
+
+        for (const m of messages) {
+          const row = document.createElement("div");
+          row.className = "flex";
+
+          const bubble = document.createElement("div");
+          const common = "rounded-3xl px-5 md:px-6 py-4 md:py-5 shadow-soft max-w-[86%] md:max-w-[72%] text-base md:text-lg leading-relaxed";
+          if (m.role === "user") {
+            row.classList.add("justify-end");
+            bubble.className = common + " bg-ink text-white";
+            bubble.innerHTML = escapeHtml(m.text).replace(/\n/g, "<br/>");
+          } else {
+            row.classList.add("justify-start");
+            bubble.className = common + " bg-white text-ink/90 md";
+            bubble.innerHTML = renderMarkdown(m.text);
+          }
+
+          row.appendChild(bubble);
+          chatEl.appendChild(row);
+        }
+
+        // scroll to bottom
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      }
+
+      function updateAttachmentChips() {
+        attachmentsRow.innerHTML = "";
+        if (attachments.length === 0) return;
+
+        for (const a of attachments) {
+          const chip = document.createElement("button");
+          chip.className = "inline-flex items-center gap-2 rounded-full bg-ink/5 hover:bg-ink/10 px-3 py-1.5 text-sm";
+          chip.title = "Remove";
+          chip.innerHTML = `<span class="truncate max-w-[220px]">${escapeHtml(a.name)}</span><span class="text-muted">✕</span>`;
+          chip.onclick = () => {
+            attachments = attachments.filter(x => x.id !== a.id);
+            updateAttachmentChips();
+          };
+          attachmentsRow.appendChild(chip);
+        }
+      }
+
+      function fileToDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function fileToText(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = reject;
+          reader.readAsText(file);
+        });
+      }
+
+      // ---------- attachments ----------
+      attachBtn.addEventListener("click", () => fileInput.click());
+
+      fileInput.addEventListener("change", async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (!files.length) return;
+
+        for (const f of files) {
+          const id = crypto.randomUUID?.() || String(Date.now() + Math.random());
+
+          if (f.type.startsWith("image/")) {
+            const dataUrl = await fileToDataUrl(f);
+            attachments.push({ id, name: f.name, type: f.type, kind: "image", dataUrl });
+          } else if (
+            f.type.startsWith("text/") ||
+            /\.(txt|md|json|csv|ts|js|py|java|c|cpp|go|rs|html|css)$/i.test(f.name)
+          ) {
+            const text = await fileToText(f);
+            attachments.push({ id, name: f.name, type: f.type || "text/plain", kind: "text", text });
+          } else {
+            // Keep metadata only (e.g., PDF). No parsing in this patch.
+            attachments.push({ id, name: f.name, type: f.type || "application/octet-stream", kind: "file" });
+          }
+        }
+
+        updateAttachmentChips();
+        fileInput.value = "";
+      });
+
+      // ---------- voice ----------
+      let recorder = null;
+      let recording = false;
+      let chunks = [];
+
+      async function startRecording() {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        chunks = [];
+        recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+        recorder.ondataavailable = (ev) => {
+          if (ev.data && ev.data.size > 0) chunks.push(ev.data);
+        };
+        recorder.onstop = async () => {
+          stream.getTracks().forEach(t => t.stop());
+          const blob = new Blob(chunks, { type: "audio/webm" });
+          await transcribeAndInsert(blob);
+        };
+        recorder.start();
+        recording = true;
+        micIcon.textContent = "⏺️";
+        hintEl.textContent = "Recording… click mic again to stop.";
+      }
+
+      async function stopRecording() {
+        if (recorder && recording) recorder.stop();
+        recording = false;
+        micIcon.textContent = "🎙️";
+        hintEl.textContent = "";
+      }
+
+      async function transcribeAndInsert(blob) {
+        try {
+          hintEl.textContent = "Transcribing…";
+          const fd = new FormData();
+          fd.append("audio", blob, "voice.webm");
+          const r = await fetch("/api/transcribe", { method: "POST", body: fd });
+          if (!r.ok) throw new Error(await r.text());
+          const data = await r.json();
+          const text = (data.text || "").trim();
+          if (text) {
+            promptEl.value = (promptEl.value ? (promptEl.value + "\n") : "") + text;
+            promptEl.focus();
+          }
+        } catch (e) {
+          alert("Transcription failed. See console.");
+          console.error(e);
+        } finally {
+          hintEl.textContent = "";
+        }
+      }
+
+      micBtn.addEventListener("click", async () => {
+        try {
+          if (!recording) await startRecording();
+          else await stopRecording();
+        } catch (e) {
+          console.error(e);
+          alert("Mic not available. Check browser permissions (HTTPS or localhost).");
+        }
+      });
+
+      // ---------- send ----------
+      function buildInputPayload(message) {
+        // For images: send as multimodal. For text files: include in the prompt.
+        let composed = message;
+
+        const textFiles = attachments.filter(a => a.kind === "text" && a.text);
+        if (textFiles.length) {
+          composed += "\n\n---\nAttached notes/files:\n";
+          for (const t of textFiles) {
+            // Trim to avoid huge payloads
+            const snippet = t.text.slice(0, 20000);
+            composed += `\n\n[${t.name}]\n${snippet}\n`;
+          }
+          composed += "\n---\n";
+        }
+
+        const imageFiles = attachments.filter(a => a.kind === "image" && a.dataUrl);
+
+        // If no images, keep it simple (string)
+        if (imageFiles.length === 0) return { input: composed, has_images: false };
+
+        // If images exist, send structured input for Responses API
+        const content = [{ type: "input_text", text: composed }];
+        for (const img of imageFiles.slice(0, 6)) {
+          content.push({ type: "input_image", image_url: img.dataUrl });
+        }
+        return { input: [{ role: "user", content }], has_images: true };
+      }
+
+      async function send() {
+        const msg = promptEl.value.trim();
+        if (!msg && attachments.length === 0) return;
+
+        addMessage("user", msg || "(sent an attachment)");
+        promptEl.value = "";
+
+        // Prepare assistant streaming message placeholder
+        const assistantMsg = { role: "assistant", text: "" };
+        messages.push(assistantMsg);
+        renderMessages();
+
+        const payloadBuilt = buildInputPayload(msg || "");
+        const payload = {
+          previous_response_id,
+          // server will use either input string or structured input
+          message: payloadBuilt.input,
+        };
+
+        // clear attachments after sending
+        attachments = [];
+        updateAttachmentChips();
+
+        try {
+          const res = await fetch("/api/chat/stream", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          if (!res.ok) throw new Error(await res.text());
+
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+
+          let buf = "";
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            buf += decoder.decode(value, { stream: true });
+
+            // Parse SSE
+            const parts = buf.split("\n\n");
+            buf = parts.pop() || "";
+            for (const part of parts) {
+              const lines = part.split("\n");
+              let eventName = "message";
+              const dataLines = [];
+              for (const line of lines) {
+                if (line.startsWith("event:")) eventName = line.slice(6).trim();
+                if (line.startsWith("data:")) dataLines.push(line.slice(5));
+              }
+              const dataStr = dataLines.join("\n");
+              if (eventName === "meta") {
+                try {
+                  const meta = JSON.parse(dataStr);
+                  if (meta.response_id) previous_response_id = meta.response_id;
+                } catch {}
+              } else if (eventName === "delta") {
+                assistantMsg.text += dataStr;
+                renderMessages();
+              } else if (eventName === "done") {
+                // no-op
+              } else if (eventName === "error") {
+                assistantMsg.text += "\n\n(Streaming error)";
+                renderMessages();
+              }
+            }
+          }
+        } catch (e) {
+          console.error(e);
+          assistantMsg.text = "Error: failed to stream response. Check server logs.";
+          renderMessages();
+        }
+      }
+
+      sendBtn.addEventListener("click", send);
+
+      promptEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          send();
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        messages.length = 0;
+        previous_response_id = null;
+        attachments = [];
+        updateAttachmentChips();
+        renderMessages();
+      });
+    </script>
+  </body>
+</html>

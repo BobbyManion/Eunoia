@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Eunoia App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            boxShadow: { soft: "0 10px 30px rgba(0,0,0,0.08)" },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* subtle app background like Manus */
+      .app-bg {
+        background:
+          radial-gradient(circle at 1px 1px, rgba(15,23,42,0.06) 1px, transparent 0);
+        background-size: 28px 28px;
+      }
+    
+      /* hide scrollbars but keep scrolling */
+      .hide-scrollbar::-webkit-scrollbar { width: 0; height: 0; }
+      .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+    </style>
+  </head>
+
+  <body class="h-screen bg-white text-slate-900">
+    <div class="h-full flex app-bg">
+      <!-- Sidebar -->
+      <aside class="w-[280px] border-r border-slate-200 bg-white/80 backdrop-blur flex flex-col">
+        <a href="/" class="px-4 py-4 flex items-center gap-2 hover:opacity-90">
+          <div class="h-9 w-9 rounded-xl bg-slate-900 text-white grid place-items-center font-semibold">E</div>
+          <div class="font-semibold">Eunoia</div>
+        </a>
+
+        <div class="px-3">
+          <button
+            id="newTaskBtn"
+            class="w-full rounded-xl bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800"
+          >
+            + New task
+          </button>
+        </div>
+        <div class="px-3 mt-4">
+          <div class="text-xs font-semibold text-slate-500 px-2 mb-2">Chats</div>
+          
+          <div class="px-2 mb-2">
+            <input id="chatSearchInput" type="text" placeholder="Search chats"
+              class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300" />
+          </div>
+<div id="chatsList" class="space-y-1 max-h-[46vh] overflow-y-auto hide-scrollbar pr-1"></div>
+        </div>
+
+      </aside>
+
+      <!-- Main -->
+      <main class="flex-1 flex flex-col">
+        <!-- Top bar -->
+        <header class="h-14 border-b border-slate-200 bg-white/70 backdrop-blur flex items-center justify-between px-5">
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <button
+                id="modelBtn"
+                class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+              >
+                Eunoia 1.0 ▾
+              </button>
+              <div
+                id="modelMenu"
+                class="hidden absolute mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-soft p-2 z-50"
+              >
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm" data-model="Eunoia 1.0">
+                  Eunoia 1.0 <span class="text-xs text-slate-500">(default)</span>
+                </button>
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm" data-model="Eunoia Pro">
+                  Eunoia Pro <span class="text-xs text-slate-500">(faster + deeper)</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="text-sm text-slate-500">What can I do for you?</div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:bg-slate-50">🔔</button>
+            <div class="rounded-full h-9 w-9 bg-slate-200"></div>
+          </div>
+        </header>
+
+        <!-- Center stage -->
+        <section class="flex-1 overflow-hidden flex flex-col items-center justify-center px-4">
+          <div class="w-full max-w-3xl">
+            <h1 class="text-3xl md:text-4xl font-semibold text-center mb-8">
+              我能为你做什么？
+            </h1>
+
+            <!-- Messages (optional like Manus: you can keep hidden until first send) -->
+            <div
+              id="chatMessages"
+              class="hidden mb-4 max-h-[40vh] overflow-y-auto hide-scrollbar rounded-2xl bg-white/70 backdrop-blur border border-slate-200 p-4 space-y-3"
+            ></div>
+
+            <!-- Composer -->
+            <form id="chatForm" class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur shadow-soft">
+              <div class="flex items-end gap-2 p-3">
+                <button
+                  type="button"
+                  class="h-10 w-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 grid place-items-center"
+                  title="Attach"
+                >
+                  +
+                </button>
+
+                <textarea
+                  id="chatInput"
+                  rows="2"
+                  class="flex-1 resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+                  placeholder="Describe what you want to do…"
+                  required
+                ></textarea>
+
+                <button
+                  id="chatSend"
+                  type="submit"
+                  class="h-10 px-4 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  Send
+                </button>
+              </div>
+
+              <!-- Suggestion chips -->
+              <div class="px-3 pb-3">
+                <div class="flex flex-wrap gap-2" id="examplePrompts"></div>
+              </div>
+
+              <!-- Tiny bottom row like integrations strip -->
+              <div class="px-3 pb-3 flex items-center justify-between text-xs text-slate-500">
+                <div class="flex items-center gap-2">
+                  <button id="chatReset" type="button" class="hover:text-slate-800">Reset</button>
+                  <span class="text-slate-300">•</span>
+                  <span>Streaming enabled</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                  <span>Connected</span>
+                </div>
+              </div>
+            </form>
+
+            <!-- Fake reset progress (reuse yours) -->
+            <div id="resetProgressWrap" class="hidden mt-3 w-full">
+              <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+                <div id="resetProgressBar" class="h-full w-0 bg-slate-900 transition-all duration-700 ease-out"></div>
+              </div>
+              <div class="mt-1 text-xs text-slate-500">Resetting…</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- 3) Paste your existing chat JS here, with only tiny edits -->
+    <script>
+
+      // --- model dropdown behavior (UI-only) ---
+      const modelBtn = document.getElementById("modelBtn");
+      const modelMenu = document.getElementById("modelMenu");
+      modelBtn.addEventListener("click", () => modelMenu.classList.toggle("hidden"));
+      modelMenu.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-model]");
+        if (!btn) return;
+        modelBtn.textContent = btn.dataset.model + " ▾";
+        modelMenu.classList.add("hidden");
+      });
+      document.addEventListener("click", (e) => {
+        if (!modelBtn.contains(e.target) && !modelMenu.contains(e.target)) modelMenu.classList.add("hidden");
+      });
+
+      // --- elements ---
+      const chatMessagesEl = document.getElementById("chatMessages");
+      const chatFormEl = document.getElementById("chatForm");
+      const chatInputEl = document.getElementById("chatInput");
+      const chatResetEl = document.getElementById("chatReset");
+      const chatSendEl = document.getElementById("chatSend");
+
+      const newTaskBtn = document.getElementById("newTaskBtn");
+      const chatsListEl = document.getElementById("chatsList");
+      const chatSearchInputEl = document.getElementById("chatSearchInput");
+
+      const resetProgressWrap = document.getElementById("resetProgressWrap");
+      const resetProgressBar = document.getElementById("resetProgressBar");
+
+      // --- storage + state (ChatGPT-like: multiple chats, rename/delete, search) ---
+      const STORAGE_KEYS = {
+        chats: "eunoia_chats_v2",
+        activeChat: "eunoia_active_chat_v2",
+      };
+
+      /** state.chats: {id, title, messages:[{role,text}], previousResponseId, createdAt, updatedAt} */
+      let state = { chats: [], activeChatId: null };
+      let searchQuery = "";
+
+      function uid() {
+        return Math.random().toString(36).slice(2, 10) + "-" + Date.now().toString(36);
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEYS.chats, JSON.stringify(state.chats));
+        localStorage.setItem(STORAGE_KEYS.activeChat, state.activeChatId || "");
+      }
+
+      function loadState() {
+        try {
+          const chatsRaw = localStorage.getItem(STORAGE_KEYS.chats);
+          const activeRaw = localStorage.getItem(STORAGE_KEYS.activeChat);
+          state.chats = chatsRaw ? JSON.parse(chatsRaw) : [];
+          state.activeChatId = activeRaw || null;
+        } catch {
+          state = { chats: [], activeChatId: null };
+        }
+
+        // Ensure there is at least one chat
+        if (!state.chats.length) {
+          const c = createChat("New chat");
+          state.activeChatId = c.id;
+          saveState();
+        }
+
+        // Ensure active chat exists
+        if (state.activeChatId && !state.chats.find(c => c.id === state.activeChatId)) {
+          state.activeChatId = state.chats[0].id;
+          saveState();
+        }
+      }
+
+      function getActiveChat() {
+        return state.chats.find(c => c.id === state.activeChatId) || null;
+      }
+
+      function createChat(title = "New chat") {
+        const now = Date.now();
+        const chat = {
+          id: uid(),
+          title,
+          messages: [],
+          previousResponseId: null,
+          createdAt: now,
+          updatedAt: now,
+        };
+        state.chats.unshift(chat); // newest on top like ChatGPT
+        return chat;
+      }
+
+      function setActiveChat(chatId) {
+        state.activeChatId = chatId;
+        saveState();
+        renderChats();
+        renderActiveChat();
+      }
+
+      function maybeAutoTitle(chat) {
+        // If it's still default title, title it based on first user message
+        if (!chat) return;
+        if (chat.title !== "New chat") return;
+        const firstUser = chat.messages.find(m => m.role === "user");
+        if (!firstUser) return;
+        const t = firstUser.text.trim().replace(/\s+/g, " ").slice(0, 42);
+        chat.title = t || "New chat";
+      }
+
+      function renameChat(chatId) {
+        const chat = state.chats.find(c => c.id === chatId);
+        if (!chat) return;
+        const name = prompt("Rename chat", chat.title);
+        if (name === null) return;
+        const trimmed = name.trim();
+        if (!trimmed) return;
+        chat.title = trimmed;
+        chat.updatedAt = Date.now();
+        saveState();
+        renderChats();
+      }
+
+      function deleteChat(chatId) {
+        const chat = state.chats.find(c => c.id === chatId);
+        if (!chat) return;
+        const ok = confirm(`Delete chat "${chat.title}"?`);
+        if (!ok) return;
+
+        state.chats = state.chats.filter(c => c.id !== chatId);
+
+        if (!state.chats.length) {
+          const c = createChat("New chat");
+          state.activeChatId = c.id;
+        } else if (state.activeChatId === chatId) {
+          state.activeChatId = state.chats[0].id;
+        }
+        saveState();
+        renderChats();
+        renderActiveChat();
+      }
+
+      function renderChats() {
+        const q = (searchQuery || "").toLowerCase().trim();
+        const chats = q
+          ? state.chats.filter(c => (c.title || "").toLowerCase().includes(q))
+          : state.chats;
+
+        chatsListEl.innerHTML = "";
+
+        for (const chat of chats) {
+          const row = document.createElement("div");
+          row.className = "group flex items-center gap-2";
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className =
+            "flex-1 text-left px-3 py-2 rounded-xl text-sm " +
+            (chat.id === state.activeChatId ? "bg-slate-100" : "hover:bg-slate-50");
+          btn.textContent = chat.title || "Untitled";
+          btn.addEventListener("click", () => setActiveChat(chat.id));
+
+          const renameBtn = document.createElement("button");
+          renameBtn.type = "button";
+          renameBtn.className =
+            "opacity-0 group-hover:opacity-100 transition rounded-lg px-2 py-1 text-xs border border-slate-200 bg-white hover:bg-slate-50";
+          renameBtn.textContent = "Rename";
+          renameBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            renameChat(chat.id);
+          });
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className =
+            "opacity-0 group-hover:opacity-100 transition rounded-lg px-2 py-1 text-xs border border-slate-200 bg-white hover:bg-slate-50";
+          delBtn.textContent = "Delete";
+          delBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            deleteChat(chat.id);
+          });
+
+          row.appendChild(btn);
+          row.appendChild(renameBtn);
+          row.appendChild(delBtn);
+          chatsListEl.appendChild(row);
+        }
+      }
+
+      function renderActiveChat() {
+        const chat = getActiveChat();
+        chatMessagesEl.innerHTML = "";
+
+        if (!chat || !chat.messages.length) {
+          chatMessagesEl.classList.add("hidden");
+          return;
+        }
+
+        chatMessagesEl.classList.remove("hidden");
+        for (const m of chat.messages) {
+          addMessage(m.role, m.text, false);
+        }
+        chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+      }
+
+      // --- example prompts ---
+      const EXAMPLE_PROMPTS = [
+        { label: "CS PhD · NLP / LLMs", text: "I'm applying for a CS PhD in the US. Interests: NLP and large language models..." },
+        { label: "HCI · User Studies", text: "I'm applying for a CS PhD. Interests: HCI and accessibility..." },
+        { label: "ML Systems · Efficiency", text: "I'm interested in ML systems for efficient training and inference..." },
+        { label: "CV + Robotics", text: "I'm interested in vision-language models for robotics manipulation..." },
+      ];
+
+      function renderExamplePrompts() {
+        const wrap = document.getElementById("examplePrompts");
+        wrap.innerHTML = "";
+        for (const ex of EXAMPLE_PROMPTS) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className =
+            "rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 active:scale-[0.99] transition shadow-sm";
+          btn.textContent = ex.label;
+          btn.addEventListener("click", () => {
+            if (chatInputEl.disabled) return;
+            chatInputEl.value = ex.text;
+            chatInputEl.focus();
+          });
+          wrap.appendChild(btn);
+        }
+      }
+
+      // --- UI helpers ---
+      function setBusy(isBusy) {
+        chatSendEl.disabled = isBusy;
+        chatInputEl.disabled = isBusy;
+      }
+
+      function addMessage(role, text, scroll = true) {
+        chatMessagesEl.classList.remove("hidden");
+
+        const wrapper = document.createElement("div");
+        const isUser = role === "user";
+        wrapper.className = "flex " + (isUser ? "justify-end" : "justify-start");
+
+        const bubble = document.createElement("div");
+        bubble.className =
+          "max-w-[85%] rounded-2xl border border-slate-200 px-4 py-3 text-sm leading-relaxed bg-white";
+
+        const meta = document.createElement("div");
+        meta.className = "text-[11px] font-semibold text-slate-600 mb-1";
+        meta.textContent = isUser ? "You" : "Eunoia";
+
+        const body = document.createElement("div");
+        body.className = "text-slate-800 whitespace-pre-wrap";
+        body.textContent = text;
+
+        bubble.appendChild(meta);
+        bubble.appendChild(body);
+        wrapper.appendChild(bubble);
+
+        chatMessagesEl.appendChild(wrapper);
+        if (scroll) chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+        return body;
+      }
+
+      // Fake reset progress (kept from your original)
+      const FAKE_RESET_MS = 650;
+      function resetChatWithProgress() {
+        if (resetProgressWrap && resetProgressBar) {
+          resetProgressWrap.classList.remove("hidden");
+          resetProgressBar.style.width = "0%";
+          resetProgressBar.offsetHeight;
+          resetProgressBar.style.width = "100%";
+        }
+        setBusy(true);
+
+        // ChatGPT-like: New chat creates a new thread (not clearing current one)
+        setTimeout(() => {
+          const c = createChat("New chat");
+          state.activeChatId = c.id;
+          saveState();
+          renderChats();
+          renderActiveChat();
+        }, FAKE_RESET_MS - 80);
+
+        setTimeout(() => {
+          resetProgressWrap?.classList.add("hidden");
+          if (resetProgressBar) resetProgressBar.style.width = "0%";
+          setBusy(false);
+          chatInputEl.focus();
+        }, FAKE_RESET_MS + 120);
+      }
+
+      // --- SSE parsing + streaming (same protocol as your backend) ---
+      function sseParse(bufferChunk, onEvent) {
+        let buffer = bufferChunk;
+        let idx;
+        while ((idx = buffer.indexOf("\n\n")) !== -1) {
+          const raw = buffer.slice(0, idx);
+          buffer = buffer.slice(idx + 2);
+
+          let event = "message";
+          let dataLines = [];
+          for (const line of raw.split("\n")) {
+            if (line.startsWith("event:")) event = line.slice(6).trim();
+            if (line.startsWith("data:")) dataLines.push(line.slice(5));
+          }
+          onEvent(event, dataLines.join("\n"));
+        }
+        return buffer;
+      }
+
+      async function sendToBackendStream(message, assistantBodyEl, chat) {
+        const res = await fetch("/api/chat/stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message, previous_response_id: chat.previousResponseId }),
+        });
+        if (!res.ok || !res.body) throw new Error("Streaming request failed");
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+
+        let buffer = "";
+        let text = "";
+        let nextResponseId = null;
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          buffer = sseParse(buffer, (event, data) => {
+            if (event === "delta") {
+              text += data;
+              assistantBodyEl.textContent = text;
+            } else if (event === "meta" || event === "done") {
+              try {
+                const obj = JSON.parse(data);
+                if (obj.response_id) nextResponseId = obj.response_id;
+              } catch {}
+            } else if (event === "error") {
+              assistantBodyEl.textContent += "\n\n[Error streaming response]";
+            }
+          });
+        }
+        return nextResponseId;
+      }
+
+      // --- events ---
+      newTaskBtn?.addEventListener("click", resetChatWithProgress);
+
+      chatResetEl?.addEventListener("click", () => {
+        // "Reset" just clears the current chat messages (doesn't delete the thread)
+        const chat = getActiveChat();
+        if (!chat) return;
+        chat.messages = [];
+        chat.previousResponseId = null;
+        chat.updatedAt = Date.now();
+        saveState();
+        renderActiveChat();
+        renderChats();
+      });
+
+      chatSearchInputEl?.addEventListener("input", (e) => {
+        searchQuery = e.target.value || "";
+        renderChats();
+      });
+
+      chatFormEl.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const message = (chatInputEl.value || "").trim();
+        if (!message) return;
+
+        const chat = getActiveChat();
+        if (!chat) return;
+
+        // add user message
+        chat.messages.push({ role: "user", text: message });
+        chat.updatedAt = Date.now();
+        saveState();
+
+        addMessage("user", message);
+        chatInputEl.value = "";
+
+        // add assistant placeholder
+        const assistantBodyEl = addMessage("assistant", "");
+        chat.messages.push({ role: "assistant", text: "" });
+        const assistantIndex = chat.messages.length - 1;
+
+        setBusy(true);
+        try {
+          const rid = await sendToBackendStream(message, assistantBodyEl, chat);
+          // sync assistant text back to state
+          chat.messages[assistantIndex].text = assistantBodyEl.textContent || "";
+          if (rid) chat.previousResponseId = rid;
+
+          maybeAutoTitle(chat);
+          chat.updatedAt = Date.now();
+          saveState();
+          renderChats();
+        } catch (err) {
+          assistantBodyEl.textContent = "Sorry — streaming failed. Check the server.";
+          chat.messages[assistantIndex].text = assistantBodyEl.textContent;
+          chat.updatedAt = Date.now();
+          saveState();
+          console.error(err);
+        } finally {
+          setBusy(false);
+          chatInputEl.focus();
+        }
+      });
+
+      // --- init ---
+      loadState();
+      renderExamplePrompts();
+      renderChats();
+      renderActiveChat();
+
+    </script>
+  </body>
+</html>
