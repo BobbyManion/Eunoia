@@ -209,7 +209,9 @@
           <!-- User footer -->
           <div class="px-3 py-3 border-t border-black/5">
             <div class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-black/5">
-              <div class="h-9 w-9 rounded-full bg-slate-900/80 grid place-items-center text-white font-semibold"><span>U</span></div>
+              <div class="h-9 w-9 rounded-full bg-indigo-600/90 grid place-items-center text-white font-semibold">
+                <span>U</span>
+              </div>
               <div class="min-w-0">
                 <div class="text-sm font-semibold leading-tight truncate">Username</div>
                 <div class="text-xs text-black/40 leading-tight truncate">Eunoia</div>
@@ -232,8 +234,8 @@
                 class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50"
               >
                 <div class="flex items-center gap-1">
-                    <div id="modelName" class="text-sm font-semibold text-black/80">Eunoia</div>
-                    <span id="modelTierPill" class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Lite</span>
+                    <div class="text-sm font-semibold text-black/80">Eunoia</div>
+                    <span class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Lite </span>
                     <span class="text-xs text-slate-500">▾</span>
                 </div>
               </button>
@@ -272,14 +274,9 @@
               <span class="text-sm text-black/70">Share</span>
             </button>
 
-            <button id="notifBtn" class="icon-btn rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" title="Notifications" aria-label="Notifications">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </button>
+            <button class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:bg-slate-50">🔔</button>
 
-            <div class="h-9 w-9 rounded-full bg-slate-900/80 grid place-items-center text-white font-semibold">
+            <div class="h-9 w-9 rounded-full bg-indigo-600/90 grid place-items-center text-white font-semibold">
                 <span>U</span>
               </div>
           </div>
@@ -292,22 +289,19 @@
             <!-- Title/intro (shown when no messages) -->
             <div id="emptyState" class="text-center mb-10">
 
-              <!-- Brand (hero pill like ChatGPT) -->
-
-              <div class="flex justify-center mb-5">
-                  <div class="flex items-center gap-2">
-                    <!-- Sketch logo (inline SVG) -->
-                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-                      <path d="M13 2.5c-4.8 0-8.7 3.4-8.7 7.7 0 2.2 1 4.1 2.7 5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
-                      <path d="M8.2 19.6c1.3 1.0 3 1.6 4.8 1.6 4.8 0 8.7-3.4 8.7-7.7 0-2.2-1-4.1-2.7-5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
-                      <path d="M9.2 8.7c.8-1.7 2.2-2.7 3.8-2.7 2.4 0 4.3 2.2 4.3 5 0 2.8-1.9 5-4.3 5-1.7 0-3.1-1.1-3.9-2.9" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
-                      <path d="M6.8 22.5c2.6-.8 3.8-2.3 4.6-4.1" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                    <div class="text-lg md:text-2xl font-semibold text-black/80">Eunoia</div>
-                    <span id="heroTierPill" class="text-sm rounded-full px-3 py-1 bg-black/5 text-black/45 font-semibold">Lite</span>
-                  </div>
-
-              </div>
+              <!-- Brand -->
+              <a href="/" class="px-4 pt-5 pb-3 flex items-center gap-3 hover:opacity-90">
+                <!-- Sketch logo (inline SVG) -->
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                  <path d="M13 2.5c-4.8 0-8.7 3.4-8.7 7.7 0 2.2 1 4.1 2.7 5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M8.2 19.6c1.3 1.0 3 1.6 4.8 1.6 4.8 0 8.7-3.4 8.7-7.7 0-2.2-1-4.1-2.7-5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M9.2 8.7c.8-1.7 2.2-2.7 3.8-2.7 2.4 0 4.3 2.2 4.3 5 0 2.8-1.9 5-4.3 5-1.7 0-3.1-1.1-3.9-2.9" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M6.8 22.5c2.6-.8 3.8-2.3 4.6-4.1" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+                <div class="flex items-baseline gap-2">
+                  <div class="text-2xl md:text-4xl font-semibold">Eunoia <span class="text-muted font-medium">app</span></div>
+                </div>
+              </a>
 
               <p class="text-sm md:text-[15px] text-black/55 leading-relaxed">
                 Hi! Tell me your interests (area, methods) and I’ll suggest programs/labs/advisors and explain fit.
@@ -338,12 +332,6 @@
                       <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
                       <path d="M19 11a7 7 0 0 1-14 0" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
                       <path d="M12 18v3" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  </button>
-
-                  <button id="stopBtn" type="button" class="icon-btn !p-2 hidden" title="Stop generating" aria-label="Stop generating">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M7 7h10v10H7z" stroke="#111827" stroke-width="2" stroke-linejoin="round"/>
                     </svg>
                   </button>
 
@@ -452,48 +440,18 @@
       }
 
       // --- model dropdown behavior (UI-only) ---
-const modelBtn = document.getElementById("modelBtn");
-const modelMenu = document.getElementById("modelMenu");
-const modelTierPillEl = document.getElementById("modelTierPill");
-const heroTierPillEl = document.getElementById("heroTierPill");
-
-let currentTier = "Lite"; // "Lite" | "Pro"
-
-function setTier(nextTier) {
-  currentTier = nextTier === "Pro" ? "Pro" : "Lite";
-  if (modelTierPillEl) modelTierPillEl.textContent = currentTier;
-  if (heroTierPillEl) heroTierPillEl.textContent = currentTier;
-  renderMessages(); // update assistant badges
-}
-
-function assistantBadgeHtml() {
-  // Small pill used in chat headers instead of "E"
-  const tier = currentTier;
-  return `
-      <span class="text-sm font-semibold text-black/80">Eunoia</span>
-      <span class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">${tier}</span>
-  `;
-}
-
-modelBtn.addEventListener("click", () => modelMenu.classList.toggle("hidden"));
-modelMenu.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-model]");
-  if (!btn) return;
-  const isPro = String(btn.dataset.model || "").toLowerCase().includes("pro");
-  setTier(isPro ? "Pro" : "Lite");
-  modelMenu.classList.add("hidden");
-});
-document.addEventListener("click", (e) => {
-  if (!modelBtn.contains(e.target) && !modelMenu.contains(e.target)) modelMenu.classList.add("hidden");
-});
-
-// Hero pill opens the same menu (so it matches the screenshot feel)
-const heroModelPill = document.getElementById("heroModelPill");
-heroModelPill?.addEventListener("click", () => {
-  // If the hero pill is clicked, open menu near the top button (consistent position)
-  modelMenu.classList.toggle("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+      const modelBtn = document.getElementById("modelBtn");
+      const modelMenu = document.getElementById("modelMenu");
+      modelBtn.addEventListener("click", () => modelMenu.classList.toggle("hidden"));
+      modelMenu.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-model]");
+        if (!btn) return;
+        modelBtn.textContent = btn.dataset.model + " ▾";
+        modelMenu.classList.add("hidden");
+      });
+      document.addEventListener("click", (e) => {
+        if (!modelBtn.contains(e.target) && !modelMenu.contains(e.target)) modelMenu.classList.add("hidden");
+      });
 
 
       // ----------------------------
@@ -504,7 +462,6 @@ heroModelPill?.addEventListener("click", () => {
       const chatFormEl = document.getElementById("chatForm");
       const chatInputEl = document.getElementById("chatInput");
       const chatSendEl = document.getElementById("chatSend");
-      const stopBtnEl = document.getElementById("stopBtn");
       const chatResetEl = document.getElementById("chatReset");
       const attachBtnEl = document.getElementById("attachBtn");
       const fileInputEl = document.getElementById("fileInput");
@@ -536,23 +493,10 @@ heroModelPill?.addEventListener("click", () => {
       }
 
       function setBusy(isBusy) {
-  chatSendEl.disabled = isBusy;
-  chatInputEl.disabled = isBusy;
-  chatSendEl.style.opacity = isBusy ? "0.5" : "1";
-
-  // ChatGPT-like: show Stop button while streaming
-  const stopBtn = document.getElementById("stopBtn");
-  if (stopBtn) {
-    stopBtn.classList.toggle("hidden", !isBusy);
-    chatSendEl.classList.toggle("hidden", isBusy);
-  }
-
-      stopBtnEl?.addEventListener("click", () => {
-        if (activeStreamAbort && isStreaming) {
-          try { activeStreamAbort.abort(); } catch {}
-        }
-      });
-}
+        chatSendEl.disabled = isBusy;
+        chatInputEl.disabled = isBusy;
+        chatSendEl.style.opacity = isBusy ? "0.5" : "1";
+      }
 
       function autoGrowTextarea(el) {
         el.style.height = "auto";
@@ -903,35 +847,31 @@ heroModelPill?.addEventListener("click", () => {
       // Share (top right + context menu)
       // ----------------------------
       async function shareChat(chatId) {
-  const c = chats.find(x => x.id === chatId);
-  if (!c) return;
+        const c = chats.find(x => x.id === chatId);
+        if (!c) return;
 
-  // Build a shareable link containing chat id
-  const url = new URL(window.location.href);
-  url.searchParams.set("chat", chatId);
-  const link = url.toString();
+        // Build a shareable link containing chat id
+        const url = new URL(window.location.href);
+        url.searchParams.set("chat", chatId);
 
-  // Try Web Share API first (if user cancels, fall back to copy)
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: c.title || "Eunoia Chat", url: link });
-      showToast("Shared");
-      return;
-    } catch {
-      // fall through to copy
-    }
-  }
+        // Try Web Share API first
+        try {
+          if (navigator.share) {
+            await navigator.share({ title: c.title || "Eunoia Chat", url: url.toString() });
+            showToast("Shared");
+            return;
+          }
+        } catch {}
 
-  // Fallback: copy to clipboard (ensure toast appears on first click)
-  try {
-    await navigator.clipboard.writeText(link);
-    showToast("Link copied");
-  } catch {
-    // last resort: prompt for manual copy
-    prompt("Copying link：", link);
-    showToast("Link copied");
-  }
-}
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(url.toString());
+          showToast("Link copied");
+        } catch {
+          // last resort
+          prompt("Copying link：", url.toString());
+        }
+      }
 
       topShareBtn.addEventListener("click", async () => {
         const c = getSelectedChat();
@@ -970,11 +910,12 @@ heroModelPill?.addEventListener("click", () => {
           header.className = "flex items-center gap-2 text-xs text-black/45 font-semibold";
           header.innerHTML = m.role === "user"
             ? `<span class="inline-flex items-center gap-2">
-                <span class="text-sm font-semibold text-black/80">User</span>
                 <span class="h-5 w-5 rounded-full bg-black/10 grid place-items-center">U</span>
+                <span>User</span>
               </span>`
             : `<span class="inline-flex items-center gap-2">
-                ${assistantBadgeHtml()}
+                <span class="h-5 w-5 rounded-full bg-black/10 grid place-items-center">E</span>
+                <span>Eunoia</span>
               </span>`;
 
           const body = document.createElement("div");
@@ -1029,8 +970,6 @@ heroModelPill?.addEventListener("click", () => {
       // ----------------------------
       const STORAGE_KEY = "eunoia_prev_response_id";
       let previousResponseId = localStorage.getItem(STORAGE_KEY) || null;
-      let activeStreamAbort = null; // AbortController for current stream
-      let isStreaming = false;
 
       function sseParse(bufferChunk, onEvent) {
         let buffer = bufferChunk;
@@ -1050,11 +989,10 @@ heroModelPill?.addEventListener("click", () => {
         return buffer;
       }
 
-      async function sendToBackendStream(message, onDelta, signal) {
+      async function sendToBackendStream(message, onDelta) {
         const res = await fetch("/api/chat/stream", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          signal,
           body: JSON.stringify({ message, previous_response_id: previousResponseId }),
         });
         if (!res.ok || !res.body) throw new Error("Streaming request failed");
@@ -1145,8 +1083,6 @@ heroModelPill?.addEventListener("click", () => {
 
         setBusy(true);
         try {
-          activeStreamAbort = new AbortController();
-          isStreaming = true;
           const rid = await sendToBackendStream(composedMessage, (fullText) => {
             assistantMsg.text = fullText;
             renderMessages();
@@ -1154,26 +1090,18 @@ heroModelPill?.addEventListener("click", () => {
             window.requestAnimationFrame(() => {
               window.scrollTo(0, document.body.scrollHeight);
             });
-          }, activeStreamAbort.signal);
+          });
 
           if (rid) {
             previousResponseId = rid;
             localStorage.setItem(STORAGE_KEY, previousResponseId);
           }
         } catch (err) {
-          if (err && (err.name === "AbortError" || String(err.message || "").toLowerCase().includes("aborted"))) {
-            // user stopped generation
-            persist();
-            renderMessages();
-          } else {
-            assistantMsg.text = "抱歉，流式请求失败。请检查服务器日志。";
-            console.error(err);
-            persist();
-            renderMessages();
-          }
+          assistantMsg.text = "抱歉，流式请求失败。请检查服务器日志。";
+          console.error(err);
+          persist();
+          renderMessages();
         } finally {
-          isStreaming = false;
-          activeStreamAbort = null;
           setBusy(false);
           chatInputEl.focus();
         }
