@@ -64,7 +64,7 @@
       /* Toast */
       #toast { pointer-events: none; }
 
-      /* typography for assistant output */
+      /* ChatGPT-like typography for assistant output */
       .assistant-md{
         color: rgba(0,0,0,0.80);
         font-size: 16px;
@@ -170,7 +170,7 @@
 
     
     
-/* Mobile drawer */
+/* Mobile drawer (Manus-like) */
 @media (max-width: 1023px) {
   /* Sidebar becomes an off-canvas drawer */
   #sidebar {
@@ -201,7 +201,7 @@
   body.sidebar-collapsed #sidebar { width: 72px !important; }
   body.sidebar-collapsed .sidebar-label { display: none !important; }
 
-  /* Collapsed rail: align icons, same size, single column */
+  /* Manus-like collapsed rail: align icons, same size, single column */
   body.sidebar-collapsed #sidebar button {
     width: 44px !important;
     height: 44px !important;
@@ -225,7 +225,7 @@
     padding-right: 0 !important;
   }
 
-  /* Don't list every chat in collapsed mode */
+  /* Manus-like: don't list every chat in collapsed mode */
   body.sidebar-collapsed #chatList { display: none !important; }
   body.sidebar-collapsed #chatCountPill { display: none !important; }
 
@@ -248,12 +248,6 @@
 }
 @media (max-width: 1023px) {
   #sidebarToggleBtn { display: none !important; }
-}
-
-
-/* Font restore (use original app font) */
-body, button, input, textarea, select {
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
 }
 
 </style>
@@ -461,7 +455,7 @@ body, button, input, textarea, select {
             <!-- Title/intro (shown when no messages) -->
             <div id="emptyState" class="text-center mb-10">
 
-              <!-- Brand -->
+              <!-- Brand (hero pill like ChatGPT) -->
 
               <div class="flex justify-center mb-5">
                   <div class="flex items-center gap-2">
@@ -539,7 +533,7 @@ body, button, input, textarea, select {
       </main>
     </div>
 
-    <!-- Context menu -->
+    <!-- Context menu (ChatGPT-like) -->
     <div id="ctxMenu" class="hidden fixed z-[60]">
       <div class="w-[220px] rounded-2xl bg-white shadow-menu border border-black/5 p-2">
         <button data-action="share" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-black/5 text-sm">
@@ -794,7 +788,7 @@ if (isMobile()) {
   chatInputEl.disabled = isBusy;
   chatSendEl.style.opacity = isBusy ? "0.5" : "1";
 
-  // Show Stop button while streaming
+  // ChatGPT-like: show Stop button while streaming
   const stopBtn = document.getElementById("stopBtn");
   if (stopBtn) {
     stopBtn.classList.toggle("hidden", !isBusy);
@@ -1010,14 +1004,14 @@ if (isMobile()) {
       searchInputEl.addEventListener("input", renderChatList);
 
       // ----------------------------
-      // Chat list + context menu
+      // Chat list + context menu (ChatGPT-like)
       // ----------------------------
       function openCtxMenu(chatId, anchorEl) {
         ctxTargetChatId = chatId;
         const rect = anchorEl.getBoundingClientRect();
         ctxMenu.classList.remove("hidden");
 
-        // position to the right of the list item
+        // position to the right of the list item, like ChatGPT
         const menu = ctxMenu.firstElementChild;
         const menuW = 220;
         const x = Math.min(rect.right + 10, window.innerWidth - menuW - 12);

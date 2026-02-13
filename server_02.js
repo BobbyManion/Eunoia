@@ -9,9 +9,6 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Create the Express app **before** calling app.set/app.use
-const app = express();
-
 app.set("trust proxy", 1);
 // If you serve the site & API from the same domain, you can remove CORS entirely.
 // If your frontend is on a different domain, set CORS_ORIGIN to that domain (comma-separated allowed).
