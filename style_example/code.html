@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Eunoia Scholarly Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&amp;family=Inter:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1a365d", // Deep Academic Blue
+                        "background-light": "#FDFBF7", // Ivory / Paper
+                        "background-dark": "#121212", // Charcoal Dark
+                        "paper-light": "#F4F1EA",
+                        "paper-dark": "#1E1E1E",
+                        "text-main-light": "#2D2D2D", // Charcoal
+                        "text-main-dark": "#E0E0E0", // Off-white
+                        "text-sub-light": "#5D5D5D",
+                        "text-sub-dark": "#A0A0A0",
+                        "accent-light": "#C5A065", // Gold/Bronze accent
+                        "accent-dark": "#D4AF37",
+                    },
+                    fontFamily: {
+                        serif: ["'Merriweather'", "serif"],
+                        sans: ["'Inter'", "sans-serif"],
+                        display: ["'Playfair Display'", "serif"],
+                    },
+                    boxShadow: {
+                        'paper': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card': '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                    }
+                },
+            },
+        };
+    </script>
+<style>.hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .academic-border {
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        .dark .academic-border {
+            border: 1px solid rgba(255,255,255,0.1);
+        }.bg-paper-texture {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-sans h-screen flex flex-col overflow-hidden bg-paper-texture transition-colors duration-300">
+<header class="flex justify-between items-center px-5 py-4 border-b border-stone-200 dark:border-stone-800 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-sm z-20">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary dark:text-blue-300 text-3xl">local_library</span>
+<div class="flex flex-col">
+<h1 class="font-display font-semibold text-xl tracking-tight text-primary dark:text-blue-100">Eunoia</h1>
+<span class="text-[10px] uppercase tracking-widest text-text-sub-light dark:text-text-sub-dark font-serif pl-0.5">Vol. 1 Lite</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-stone-600 dark:text-stone-400">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center font-serif text-sm shadow-sm ring-2 ring-stone-100 dark:ring-stone-700">
+                U
+            </div>
+</div>
+</header>
+<main class="flex-1 flex flex-col overflow-y-auto px-5 pt-8 pb-24 relative">
+<div class="text-center mb-10 max-w-lg mx-auto">
+<div class="inline-flex items-center justify-center px-3 py-1 rounded-full border border-primary/20 bg-primary/5 dark:bg-primary/20 text-primary dark:text-blue-200 text-xs font-serif italic mb-4">
+<span class="w-1.5 h-1.5 rounded-full bg-primary dark:bg-blue-300 mr-2 animate-pulse"></span>
+                Research Assistant Active
+            </div>
+<h2 class="font-display text-3xl text-primary dark:text-blue-50 mb-4 leading-tight">
+                What fields shall we <br/> <span class="italic font-serif">explore</span> today?
+            </h2>
+<p class="text-text-sub-light dark:text-text-sub-dark font-serif text-sm leading-relaxed px-4">
+                State your research interests, methodologies, or desired outcomes. I will curate relevant programs, labs, and advisor matches.
+            </p>
+</div>
+<div class="mb-8">
+<h3 class="text-xs font-bold uppercase tracking-widest text-text-sub-light dark:text-text-sub-dark mb-4 text-center border-b border-stone-200 dark:border-stone-700 leading-[0.1em] mx-10">
+<span class="bg-background-light dark:bg-background-dark px-2 font-serif italic normal-case text-stone-400">suggested topics</span>
+</h3>
+<div class="flex flex-wrap justify-center gap-2">
+<button class="group flex items-center space-x-2 px-4 py-2 bg-paper-light dark:bg-paper-dark border border-stone-200 dark:border-stone-700 rounded-sm shadow-sm hover:border-primary/50 transition-all">
+<span class="text-xs text-stone-500 font-serif font-bold">1.</span>
+<span class="text-sm font-serif text-text-main-light dark:text-text-main-dark group-hover:text-primary dark:group-hover:text-blue-300">CS PhD · NLP</span>
+</button>
+<button class="group flex items-center space-x-2 px-4 py-2 bg-paper-light dark:bg-paper-dark border border-stone-200 dark:border-stone-700 rounded-sm shadow-sm hover:border-primary/50 transition-all">
+<span class="text-xs text-stone-500 font-serif font-bold">2.</span>
+<span class="text-sm font-serif text-text-main-light dark:text-text-main-dark group-hover:text-primary dark:group-hover:text-blue-300">HCI · User Studies</span>
+</button>
+<button class="group flex items-center space-x-2 px-4 py-2 bg-paper-light dark:bg-paper-dark border border-stone-200 dark:border-stone-700 rounded-sm shadow-sm hover:border-primary/50 transition-all">
+<span class="text-xs text-stone-500 font-serif font-bold">3.</span>
+<span class="text-sm font-serif text-text-main-light dark:text-text-main-dark group-hover:text-primary dark:group-hover:text-blue-300">CV + Robotics</span>
+</button>
+<button class="group flex items-center space-x-2 px-4 py-2 bg-paper-light dark:bg-paper-dark border border-stone-200 dark:border-stone-700 rounded-sm shadow-sm hover:border-primary/50 transition-all">
+<span class="text-xs text-stone-500 font-serif font-bold">4.</span>
+<span class="text-sm font-serif text-stone-500 italic group-hover:text-primary dark:group-hover:text-blue-300">Undecided / Exploration</span>
+</button>
+</div>
+</div>
+<div class="flex-1 mt-auto">
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="font-display font-semibold text-lg text-primary dark:text-blue-100">Recent Inquiries</h3>
+<button class="text-xs font-serif italic text-primary dark:text-blue-300 underline decoration-1 underline-offset-2">View Archive</button>
+</div>
+<div class="space-y-3">
+<div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-4 rounded-sm shadow-paper relative before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-stone-300 dark:before:bg-stone-700 pl-5">
+<div class="flex justify-between items-start mb-1">
+<span class="font-serif text-xs text-stone-400">Fig 1. SCAD</span>
+<span class="text-xs text-stone-400">2h ago</span>
+</div>
+<p class="font-serif text-sm text-text-main-light dark:text-text-main-dark line-clamp-2">Looking for art and design focused graduate programs with emphasis on...</p>
+</div>
+<div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-4 rounded-sm shadow-paper relative before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-primary dark:before:bg-blue-600 pl-5 opacity-80">
+<div class="flex justify-between items-start mb-1">
+<span class="font-serif text-xs text-stone-400">Fig 2. Application Draft</span>
+<span class="text-xs text-stone-400">Yesterday</span>
+</div>
+<p class="font-serif text-sm text-text-main-light dark:text-text-main-dark line-clamp-1">Drafting a statement of purpose for Stanford's CS...</p>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-0 left-0 w-full bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-stone-200 dark:border-stone-800 p-4 pb-6 z-30">
+<div class="relative max-w-2xl mx-auto">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-stone-400 text-xl">add</span>
+</div>
+<input class="w-full bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 text-text-main-light dark:text-text-main-dark placeholder-stone-400 rounded-lg py-3.5 pl-10 pr-24 focus:outline-none focus:border-primary dark:focus:border-blue-500 focus:ring-1 focus:ring-primary dark:focus:ring-blue-500 font-serif transition-shadow shadow-sm" placeholder="Start with your goals..." type="text"/>
+<div class="absolute inset-y-0 right-2 flex items-center space-x-1">
+<button class="p-2 text-stone-400 hover:text-primary dark:hover:text-blue-400 transition-colors">
+<span class="material-symbols-outlined text-xl">mic</span>
+</button>
+<button class="bg-primary hover:bg-primary/90 text-white p-2 rounded-md shadow-sm transition-transform active:scale-95 flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">arrow_upward</span>
+</button>
+</div>
+</div>
+<div class="flex justify-between items-center mt-2 px-1">
+<div class="flex items-center gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+<span class="text-[10px] text-stone-500 font-serif uppercase tracking-wider">Streaming Enabled</span>
+</div>
+<button class="text-[10px] text-stone-400 font-serif hover:text-stone-600 dark:hover:text-stone-300 uppercase tracking-wider">Reset Context</button>
+</div>
+</div>
+<div class="hidden fixed inset-0 bg-black/50 z-40"></div>
+
+</body></html>

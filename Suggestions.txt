@@ -1,0 +1,10 @@
+1. change the background, style, text color, profile picture color, send button color, etc to exactly the color schemes (that blue and that yellow), Change text font and font size to exactly that text font. 
+2. Don't have too many different text font sizes, make the sizes look proportionate and similar sizes be the same. 
+3. Replace the Eunoia Lite with the Eunoia vol 1 Lite like that in the header. change the eunoia icon from previous to the book icon.
+4. Keep the suggested topics. Place them in box buttons with the same bg color and shape as in the image. 
+5. in fact, change all the boxes to the shape of that in the image. 
+6. for mobile, delete the text "export" and "share", keep the icons because the header overflows. 
+7. Keep the Eunoia app thing on the top left of the left side bar. When the collapse button is clicked. The Eunoia app, icon and the collapse button is collapsed to a single collapse button only. Make sure that all collapsed icon have the same shape and align veriticlly. 
+8. change the prompt in user input chatbox from "start with your goals..." to "I'm applying for a CS PhD in the US..." 
+9. after the first generation, the prompt should change to "More..." 
+10. after the start of the first generation in a chat, the user can not change the model type. User can change model type at the start of a new conversation.

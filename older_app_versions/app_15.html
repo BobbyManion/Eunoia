@@ -9,7 +9,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
       tailwind.config = {
@@ -44,8 +48,6 @@
         --muted: rgba(0,0,0,0.55);
       }
       html, body {
-        height: 100%;
-        overflow: hidden;
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
         background: var(--paper);
         letter-spacing: -0.01em;
@@ -178,92 +180,6 @@
 
     
     
-
-
-      /* WSJ-ish academic typography: serif for message content, sans for UI */
-      #brandWordmark{
-        font-family: "Source Serif 4", ui-serif, Georgia, "Times New Roman", Times, serif;
-        letter-spacing: -0.01em;
-      }
-      .assistant-md, .user-bubble, #chatInput{
-        font-family: "Source Serif 4", ui-serif, Georgia, "Times New Roman", Times, serif;
-      }
-      .assistant-md{
-        font-size: 16px;
-        line-height: 1.8;
-        color: rgba(0,0,0,0.82);
-      }
-      @media (min-width: 768px){
-        .assistant-md{ font-size: 16.5px; }
-      }
-
-      /* Chat scroll + fixed chrome (ChatGPT-like) */
-      #appShell{ height: 100vh; overflow: hidden; }
-      #mainScroll{ height: 100vh; overflow: hidden; }
-
-      /* User bubbles (Manus-like): white card, right-justified */
-      .user-row{ display: flex; justify-content: flex-end; }
-      .user-bubble{
-        max-width: min(560px, 88%);
-        background: rgba(255,255,255,0.92);
-        border: 1px solid rgba(0,0,0,0.08);
-        border-radius: 14px;
-        padding: 12px 14px;
-        box-shadow: 0 8px 22px rgba(0,0,0,0.06);
-        color: rgba(0,0,0,0.86);
-        font-size: 16px;
-        line-height: 1.7;
-        word-break: break-word;
-      }
-
-      /* References foldout */
-      details.refs{
-        margin-top: 14px;
-        padding-top: 10px;
-        border-top: 1px solid rgba(0,0,0,0.10);
-      }
-      details.refs > summary{
-        list-style: none;
-        cursor: pointer;
-        user-select: none;
-        font-size: 13px;
-        font-family: Inter, "Noto Sans SC", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-        color: rgba(0,0,0,0.55);
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-      details.refs > summary::-webkit-details-marker{ display:none; }
-      details.refs > summary:before{
-        content: "▸";
-        display: inline-block;
-        transform: translateY(-0.5px);
-        transition: transform 120ms ease;
-      }
-      details.refs[open] > summary:before{ transform: rotate(90deg) translateX(1px); }
-      details.refs ul{
-        margin-top: 10px;
-      }
-      details.refs li{
-        color: rgba(0,0,0,0.70);
-      }
-
-      /* Mobile: tighten spacing */
-      @media (max-width: 640px){
-        .assistant-md{ font-size: 15.5px; }
-        .user-bubble{ font-size: 15.5px; max-width: 92%; }
-      }
-
-
-      @media print{
-        body{ overflow: visible !important; }
-        #sidebar, #topHeader, #composerBar, #sidebarBackdrop{ display:none !important; }
-        #mainScroll{ height:auto !important; overflow: visible !important; }
-        #chatScroll{ overflow: visible !important; }
-        .assistant-md, .user-bubble{ font-size: 12pt !important; }
-      }
-
 /* Mobile drawer */
 @media (max-width: 1023px) {
   /* Sidebar becomes an off-canvas drawer */
@@ -345,11 +261,16 @@
 }
 
 
+/* Font restore (use original app font) */
+body, button, input, textarea, select {
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
 </style>
   </head>
 
   <body class="text-ink">
-    <div id="appShell" class="h-screen flex overflow-hidden">
+    <div id="appShell" class="h-full flex">
       <!-- Sidebar -->
       <aside id="sidebar" class="w-[296px] shrink-0 bg-paper/70 backdrop-blur border-r border-black/5 transition-all duration-200 ease-out">
         <div class="h-full flex flex-col">
@@ -470,7 +391,7 @@
       <div id="sidebarBackdrop" class="hidden"></div>
 
       <!-- Main (page scroll lives here, with rightmost scrollbar) -->
-      <main id="mainScroll" class="flex-1 h-screen overflow-hidden flex flex-col">
+      <main id="mainScroll" class="flex-1 h-full overflow-y-auto">
         <!-- Top bar -->
         <header id="topHeader" class="sticky top-0 z-30 h-14 bg-paper/75 backdrop-blur border-b border-black/5">
         <div class="h-full px-6 flex items-center">
@@ -527,23 +448,6 @@
               <span class="text-sm text-black/70">Share</span>
             </button>
 
-            <div class="relative">
-              <button id="exportBtn" class="icon-btn flex items-center gap-2" title="Export">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 3v10" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M8 9l4 4 4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="text-sm text-black/70">Export</span>
-              </button>
-
-              <div id="exportMenu" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-slate-200 bg-white shadow-soft p-2 z-50">
-                <button id="exportCopyMd" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm">Copy Markdown</button>
-                <button id="exportDownloadMd" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm">Download .md</button>
-                <button id="exportPrint" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm">Print / Save PDF</button>
-              </div>
-            </div>
-
             <button id="notifBtn" class="icon-btn rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" title="Notifications" aria-label="Notifications">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -562,38 +466,40 @@
       </header>
 
         <!-- Content -->
-        <div class="flex-1 overflow-hidden">
-          <div class="h-full px-4 md:px-6 py-6 md:py-8">
-            <div class="mx-auto w-full max-w-3xl h-full flex flex-col">
-              <!-- Scrollable chat area (only this scrolls) -->
-              <div id="chatScroll" class="flex-1 overflow-y-auto no-scrollbar pr-1">
-                <div id="emptyState" class="text-center mb-10">
+        <section class="px-4 md:px-6 py-10 md:py-14">
+          <div class="mx-auto w-full max-w-3xl">
+            <!-- Title/intro (shown when no messages) -->
+            <div id="emptyState" class="text-center mb-10">
 
-                  <!-- Academic hero -->
-                  <div class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 backdrop-blur px-4 py-2 text-sm text-black/60 mb-6">
-                    <span class="h-2 w-2 rounded-full bg-[var(--accent)]"></span>
-                    <span class="italic">Research Assistant Active</span>
+              <!-- Brand -->
+
+              <div class="flex justify-center mb-5">
+                  <div class="flex items-center gap-2">
+                    <!-- Sketch logo (inline SVG) -->
+                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                      <path d="M13 2.5c-4.8 0-8.7 3.4-8.7 7.7 0 2.2 1 4.1 2.7 5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                      <path d="M8.2 19.6c1.3 1.0 3 1.6 4.8 1.6 4.8 0 8.7-3.4 8.7-7.7 0-2.2-1-4.1-2.7-5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                      <path d="M9.2 8.7c.8-1.7 2.2-2.7 3.8-2.7 2.4 0 4.3 2.2 4.3 5 0 2.8-1.9 5-4.3 5-1.7 0-3.1-1.1-3.9-2.9" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                      <path d="M6.8 22.5c2.6-.8 3.8-2.3 4.6-4.1" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                    <div id="brandWordmark" class="text-lg md:text-2xl font-semibold text-black/80">Eunoia</div>
+                    <span id="heroTierPill" class="text-sm rounded-full px-3 py-1 bg-black/5 text-black/45 font-semibold">Lite</span>
                   </div>
 
-                  <h1 class="mx-auto max-w-2xl text-[38px] md:text-[54px] leading-[1.04] tracking-tight text-black/85"
-                      style="font-family:'Source Serif 4', ui-serif, Georgia, 'Times New Roman', Times, serif;">
-                    What fields shall we <span class="italic">explore?</span>
-                  </h1>
-
-                  <p class="mx-auto max-w-xl mt-5 text-[16px] md:text-[18px] leading-relaxed text-black/55">
-                    State your research interests, methodologies, or desired outcomes. I will curate relevant programs, labs, and advisor matches.
-                  </p>
-
-                </div>
-
-                <!-- Messages -->
-                <div id="chatMessages" class="space-y-8 pb-6"></div>
               </div>
-<!-- Composer (fixed within viewport) -->
-              <div class="border-t border-black/5 pt-3 bg-paper/60 backdrop-blur">
-                <div id="composerBar" class="pt-3">
+
+              <p id="brandSubtitle" class="text-sm md:text-[15px] text-black/55 leading-relaxed">
+                Abstract: Describe your research interests (area, methods) and constraints. I’ll propose programs/labs/advisors and explain fit with citations + next steps.
+              </p>
+            </div>
+
+            <!-- Messages (borderless, same background as page) -->
+            <div id="chatMessages" class="space-y-8"></div>
+
+            <!-- Composer (borderless) -->
+            <div id="composerBar" class="mt-10">
               <form id="chatForm" class="rounded-2xl bg-transparent">
-                <div class="flex items-end gap-3 rounded-2xl bg-white/70 backdrop-blur px-3 py-3 border border-black/5 shadow-soft">
+                <div class="flex items-end gap-3 rounded-2xl bg-paper/70 backdrop-blur px-3 py-3">
                   <button id="attachBtn" type="button" class="icon-btn !p-2" title="Attach file(s)">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path d="M12 5v14M5 12h14" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
@@ -628,28 +534,18 @@
                   </button>
                 </div>
 
-
                 <!-- Suggestion chips -->
-                  <div class="mt-4 flex items-center justify-center gap-4 text-xs text-black/35">
-                    <span class="h-px w-20 bg-black/10"></span>
-                    <span class="italic tracking-[0.18em] uppercase">suggested topics</span>
-                    <span class="h-px w-20 bg-black/10"></span>
-                  </div>
-
                 <div class="mt-3 flex flex-wrap gap-2" id="examplePrompts"></div>
                 <div id="attachmentRow" class="mt-2 flex flex-wrap gap-2"></div>
               </form>
 
-              <div class="mt-2 text-xs text-black/35 flex items-center justify-between pb-2">
+              <div class="mt-2 text-xs text-black/35 flex items-center justify-between">
                 <span>Streaming enabled</span>
                 <button id="chatReset" type="button" class="hover:text-black/60">Reset</button>
               </div>
             </div>
           </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
       </main>
     </div>
 
@@ -775,7 +671,7 @@ const heroModelPill = document.getElementById("heroModelPill");
 heroModelPill?.addEventListener("click", () => {
   // If the hero pill is clicked, open menu near the top button (consistent position)
   modelMenu.classList.toggle("hidden");
-  chatScrollEl?.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 
@@ -869,7 +765,6 @@ if (isMobile()) {
 
 
       const chatMessagesEl = document.getElementById("chatMessages");
-      const chatScrollEl = document.getElementById("chatScroll");
       const chatFormEl = document.getElementById("chatForm");
       const chatInputEl = document.getElementById("chatInput");
       const chatSendEl = document.getElementById("chatSend");
@@ -889,11 +784,6 @@ if (isMobile()) {
       const chatCountPill = document.getElementById("chatCountPill");
 
       const topShareBtn = document.getElementById("topShareBtn");
-      const exportBtn = document.getElementById("exportBtn");
-      const exportMenu = document.getElementById("exportMenu");
-      const exportCopyMd = document.getElementById("exportCopyMd");
-      const exportDownloadMd = document.getElementById("exportDownloadMd");
-      const exportPrint = document.getElementById("exportPrint");
 
       const ctxMenu = document.getElementById("ctxMenu");
       let ctxTargetChatId = null;
@@ -1312,75 +1202,6 @@ if (isMobile()) {
         await shareChat(c.id);
       });
 
-      // ----------------------------
-      // Export (Markdown / PDF)
-      // ----------------------------
-      function chatToMarkdown(chat){
-        const lines = [];
-        const title = (chat?.title || "Eunoia Chat").trim();
-        lines.push(`# ${title}`);
-        lines.push("");
-        for (const m of (chat?.messages || [])) {
-          if (m.role === "user") {
-            lines.push(`**You:** ${m.text}`);
-          } else {
-            lines.push(`**Eunoia:**`);
-            lines.push("");
-            lines.push(m.text);
-          }
-          lines.push("\n---\n");
-        }
-        return lines.join("\n").replace(/\n{3,}/g, "\n\n");
-      }
-
-      function downloadText(filename, content){
-        const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      }
-
-      function toggleExportMenu(force){
-        exportMenu.classList.toggle("hidden", force ?? !exportMenu.classList.contains("hidden"));
-      }
-
-      exportBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        exportMenu.classList.toggle("hidden");
-      });
-
-      document.addEventListener("click", () => exportMenu.classList.add("hidden"));
-
-      exportCopyMd.addEventListener("click", async () => {
-        const md = chatToMarkdown(getSelectedChat());
-        try {
-          await navigator.clipboard.writeText(md);
-          showToast("Markdown copied");
-        } catch {
-          prompt("Copy markdown:", md);
-        }
-        exportMenu.classList.add("hidden");
-      });
-
-      exportDownloadMd.addEventListener("click", () => {
-        const chat = getSelectedChat();
-        const safe = (chat.title || "eunoia_chat").replace(/[^\w\-]+/g, "_").slice(0,50);
-        const md = chatToMarkdown(chat);
-        downloadText(`${safe}.md`, md);
-        showToast("Downloaded");
-        exportMenu.classList.add("hidden");
-      });
-
-      exportPrint.addEventListener("click", () => {
-        exportMenu.classList.add("hidden");
-        window.print();
-      });
-
       // If URL has ?chat=..., select it
       function applyChatFromUrl() {
         const url = new URL(window.location.href);
@@ -1638,7 +1459,7 @@ function renderExamplePrompts() {
             renderMessages();
             // keep scroll near bottom
             window.requestAnimationFrame(() => {
-              chatScrollEl.scrollTop = chatScrollEl.scrollHeight;
+              window.scrollTo(0, document.body.scrollHeight);
             });
           }, activeStreamAbort.signal);
 
