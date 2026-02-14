@@ -1,5 +1,3 @@
-1. change the background, style, text color, profile picture color, send button color, etc to exactly the color schemes (that blue and that yellow), Change text font and font size to exactly that text font. 
-2. Don't have too many different text font sizes, make the sizes look proportionate and similar sizes be the same. 
 3. Replace the Eunoia Lite with the Eunoia vol 1 Lite like that in the header. change the eunoia icon from previous to the book icon.
 4. Keep the suggested topics. Place them in box buttons with the same bg color and shape as in the image. 
 5. in fact, change all the boxes to the shape of that in the image. 

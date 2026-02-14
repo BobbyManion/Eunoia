@@ -8,7 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
 
     <!-- Tailwind (CDN) -->
     <script src="/app/js/tailwind-config.js"></script>
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/app/assets/styles.css" />
   </head>
 
-  <body class="text-ink bg-paper-texture">
+  <body class="text-ink">
     <div id="appShell" class="h-screen flex overflow-hidden">
       <!-- Sidebar -->
       <aside id="sidebar" class="w-[296px] shrink-0 bg-paper/70 backdrop-blur border-r border-black/5 transition-all duration-200 ease-out">
@@ -37,7 +37,7 @@
               <path d="M6.8 22.5c2.6-.8 3.8-2.3 4.6-4.1" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
             </svg>
 
-            <div class="sidebar-label font-semibold tracking-tight text-base">Eunoia</div>
+            <div class="sidebar-label font-semibold tracking-tight text-[15px]">Eunoia</div>
             <div class="sidebar-label text-xs text-black/40">web</div>
             </a>
 
@@ -90,7 +90,7 @@
           <div class="px-4 mt-5 mb-2 flex items-center justify-between">
             <div class="flex items-center gap-2 text-xs font-semibold text-black/40">
               <span class="sidebar-label">Chat</span>
-              <span id="chatCountPill" class="hidden rounded-full bg-black/5 px-2 py-0.5 text-xs text-black/50"></span>
+              <span id="chatCountPill" class="hidden rounded-full bg-black/5 px-2 py-0.5 text-[11px] text-black/50"></span>
             </div>
           </div>
 
@@ -242,11 +242,12 @@
                     <span class="italic">Research Assistant Active</span>
                   </div>
 
-                  <h1 class="mx-auto max-w-2xl text-4xl md:text-5xl leading-[1.04] tracking-tight text-black/85 font-display">
+                  <h1 class="mx-auto max-w-2xl text-[38px] md:text-[54px] leading-[1.04] tracking-tight text-black/85"
+                      style="font-family:'Source Serif 4', ui-serif, Georgia, 'Times New Roman', Times, serif;">
                     What fields shall we <span class="italic">explore?</span>
                   </h1>
 
-                  <p class="mx-auto max-w-xl mt-5 text-base leading-relaxed text-black/55">
+                  <p class="mx-auto max-w-xl mt-5 text-[16px] md:text-[18px] leading-relaxed text-black/55">
                     State your research interests, methodologies, or desired outcomes. I will curate relevant programs, labs, and advisor matches.
                   </p>
 
@@ -269,7 +270,7 @@
                       <input id="fileInput" type="file" class="hidden" multiple />
 
                       <textarea id="chatInput" rows="1"
-                        class="flex-1 resize-none bg-transparent outline-none text-sm md:text-base leading-6 placeholder:text-black/30"
+                        class="flex-1 resize-none bg-transparent outline-none text-sm md:text-[15px] leading-6 placeholder:text-black/30"
                         placeholder="Start with your goals..."
                         required></textarea>
 
