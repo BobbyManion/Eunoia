@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Eunoia App</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind (CDN) -->
+    <script src="/app/js/tailwind-config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
+
+    <link rel="stylesheet" href="/app/assets/styles.css" />
+  </head>
+
+  <body class="text-ink">
+    <div id="appShell" class="h-screen flex overflow-hidden">
+      <!-- Sidebar -->
+      <aside id="sidebar" class="w-[296px] shrink-0 bg-paper/70 backdrop-blur border-r border-black/5 transition-all duration-200 ease-out">
+        <div class="h-full flex flex-col">
+          <!-- Brand -->
+          <div class="px-4 pt-5 pb-3 flex items-center justify-between gap-3">
+            <a href="/landing" class="flex items-center gap-3 hover:opacity-90 min-w-0">
+            <!-- Sketch logo (inline SVG) -->
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+              <path d="M13 2.5c-4.8 0-8.7 3.4-8.7 7.7 0 2.2 1 4.1 2.7 5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M8.2 19.6c1.3 1.0 3 1.6 4.8 1.6 4.8 0 8.7-3.4 8.7-7.7 0-2.2-1-4.1-2.7-5.5" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M9.2 8.7c.8-1.7 2.2-2.7 3.8-2.7 2.4 0 4.3 2.2 4.3 5 0 2.8-1.9 5-4.3 5-1.7 0-3.1-1.1-3.9-2.9" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M6.8 22.5c2.6-.8 3.8-2.3 4.6-4.1" stroke="#111827" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+
+            <div class="sidebar-label font-semibold tracking-tight text-[15px]">Eunoia</div>
+            <div class="sidebar-label text-xs text-black/40">web</div>
+            </a>
+
+            <button id="sidebarToggleBtn" data-sidebar-toggle class="icon-btn" title="Toggle sidebar" aria-label="Toggle sidebar" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="4" y="5" width="16" height="14" rx="2.5" stroke="#111827" stroke-width="2"/>
+                <path d="M12 5v14" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Primary actions -->
+          <div class="px-3">
+            <button id="newTaskBtn"
+              class="w-full flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold bg-slate-900/80 text-white hover:bg-black">
+              <!-- pencil -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 20h9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="sidebar-label">New chat</span>
+            </button>
+          </div>
+
+          <div class="px-3 mt-3 space-y-1">
+            <!-- Search toggles chat search -->
+            <button id="searchToggleBtn"
+              class="w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-black/80 hover:bg-black/5">
+              <!-- magnifier -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" stroke="#111827" stroke-width="2"/>
+                <path d="M21 21l-4.35-4.35" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span class="sidebar-label">Search</span>
+            </button>
+
+            <!-- Chats (collapsed rail) -->
+            <button id="collapsedChatsBtn"
+              class="w-full hidden items-center justify-center rounded-xl px-3 py-2 text-sm text-black/80 hover:bg-black/5"
+              title="Chats" aria-label="Chats">
+              <!-- list / chat icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M8 6h13M8 12h13M8 18h13" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4 6h0.01M4 12h0.01M4 18h0.01" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Chats header -->
+          <div class="px-4 mt-5 mb-2 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-xs font-semibold text-black/40">
+              <span class="sidebar-label">Chat</span>
+              <span id="chatCountPill" class="hidden rounded-full bg-black/5 px-2 py-0.5 text-[11px] text-black/50"></span>
+            </div>
+          </div>
+
+          <!-- Search input (shown when Search toggled) -->
+          <div id="searchRow" class="px-3 pb-2 hidden">
+            <div class="rounded-xl bg-white/60 backdrop-blur px-3 py-2 flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" stroke="#111827" stroke-width="2"/>
+                <path d="M21 21l-4.35-4.35" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <input id="searchInput"
+                     class="w-full bg-transparent outline-none text-sm placeholder:text-black/30"
+                     placeholder="Search chat…" />
+              <button id="searchClearBtn" class="icon-btn !p-1.5" title="Clear">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat list -->
+          <div id="chatList" class="px-2 pb-2 flex-1 overflow-y-auto no-scrollbar"></div>
+
+          <!-- User footer -->
+          <div class="px-3 py-3 border-t border-black/5">
+            <div class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-black/5">
+              <div class="h-9 w-9 rounded-full bg-slate-900/80 grid place-items-center text-white font-semibold">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 21a8 8 0 0 0-16 0" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M12 13a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <div class="sidebar-label text-sm font-semibold leading-tight truncate">Username</div>
+                <div class="sidebar-label text-xs text-black/40 leading-tight truncate">Eunoia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Backdrop for mobile drawer -->
+      <div id="sidebarBackdrop" class="hidden"></div>
+
+      <!-- Main -->
+      <main id="mainScroll" class="flex-1 h-screen overflow-hidden flex flex-col">
+        <!-- Top bar -->
+        <header id="topHeader" class="sticky top-0 z-30 h-14 bg-paper/75 backdrop-blur border-b border-black/5">
+          <div class="h-full px-6 flex items-center">
+            <!-- Left: model dropdown -->
+            <div class="flex items-center gap-3">
+              <button id="headerSidebarToggle" data-sidebar-toggle class="icon-btn" title="Toggle sidebar" aria-label="Toggle sidebar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 6h16M4 12h16M4 18h16" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div class="relative">
+                <button
+                  id="modelBtn"
+                  class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+                >
+                  <div class="flex items-center gap-1">
+                      <div id="modelName" class="text-sm font-semibold text-black/80">Eunoia</div>
+                      <span id="modelTierPill" class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Lite</span>
+                      <span class="text-xs text-slate-500">▾</span>
+                  </div>
+                </button>
+
+                <div
+                  id="modelMenu"
+                  class="hidden absolute mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-soft p-2 z-50"
+                >
+                  <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm" data-model="Eunoia Lite">
+                    <div class="flex items-center gap-1">
+                      <div class="text-sm font-semibold text-black/80">Eunoia</div>
+                      <span class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Lite </span>
+                      <span class="text-xs text-slate-500">(default)</span>
+                    </div>
+                  </button>
+
+                  <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm" data-model="Eunoia Pro">
+                    <div class="flex items-center gap-1">
+                      <div class="text-sm font-semibold text-black/80">Eunoia</div>
+                      <span class="text-xs rounded-full px-2 py-0.5 bg-black/5 text-black/35">Pro</span>
+                      <span class="text-xs text-slate-500">(faster + deeper)</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: actions -->
+            <div class="ml-auto flex items-center gap-2">
+              <button id="topShareBtn" class="icon-btn flex items-center gap-2" title="Share">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 16v-9" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M8.5 7.5 12 4l3.5 3.5" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M20 14.5v4A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-4" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="text-sm text-black/70">Share</span>
+              </button>
+
+              <div class="relative">
+                <button id="exportBtn" class="icon-btn flex items-center gap-2" title="Export">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 3v10" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8 9l4 4 4-4" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <span class="text-sm text-black/70">Export</span>
+                </button>
+
+                <div id="exportMenu" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-slate-200 bg-white shadow-soft p-2 z-50">
+                  <button id="exportCopyMd" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm">Copy Markdown</button>
+                  <button id="exportDownloadMd" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm">Download .md</button>
+                  <button id="exportPrint" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-sm">Print / Save PDF</button>
+                </div>
+              </div>
+
+              <button id="notifBtn" class="icon-btn rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" title="Notifications" aria-label="Notifications">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+
+              <div class="h-9 w-9 rounded-full bg-slate-900/80 grid place-items-center text-white font-semibold">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20 21a8 8 0 0 0-16 0" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 13a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="flex-1 overflow-hidden">
+          <div class="h-full px-4 md:px-6 py-6 md:py-8">
+            <div class="mx-auto w-full max-w-3xl h-full flex flex-col">
+              <!-- Scrollable chat area -->
+              <div id="chatScroll" class="flex-1 overflow-y-auto no-scrollbar pr-1">
+                <div id="emptyState" class="text-center mb-10">
+
+                  <!-- Academic hero -->
+                  <div class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 backdrop-blur px-4 py-2 text-sm text-black/60 mb-6">
+                    <span class="h-2 w-2 rounded-full bg-[var(--accent)]"></span>
+                    <span class="italic">Research Assistant Active</span>
+                  </div>
+
+                  <h1 class="mx-auto max-w-2xl text-[38px] md:text-[54px] leading-[1.04] tracking-tight text-black/85"
+                      style="font-family:'Source Serif 4', ui-serif, Georgia, 'Times New Roman', Times, serif;">
+                    What fields shall we <span class="italic">explore?</span>
+                  </h1>
+
+                  <p class="mx-auto max-w-xl mt-5 text-[16px] md:text-[18px] leading-relaxed text-black/55">
+                    State your research interests, methodologies, or desired outcomes. I will curate relevant programs, labs, and advisor matches.
+                  </p>
+
+                </div>
+
+                <!-- Messages -->
+                <div id="chatMessages" class="space-y-8 pb-6"></div>
+              </div>
+
+              <!-- Composer -->
+              <div class="border-t border-black/5 pt-3 bg-paper/60 backdrop-blur">
+                <div id="composerBar" class="pt-3">
+                  <form id="chatForm" class="rounded-2xl bg-transparent">
+                    <div class="flex items-end gap-3 rounded-2xl bg-white/70 backdrop-blur px-3 py-3 border border-black/5 shadow-soft">
+                      <button id="attachBtn" type="button" class="icon-btn !p-2" title="Attach file(s)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M12 5v14M5 12h14" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      </button>
+                      <input id="fileInput" type="file" class="hidden" multiple />
+
+                      <textarea id="chatInput" rows="1"
+                        class="flex-1 resize-none bg-transparent outline-none text-sm md:text-[15px] leading-6 placeholder:text-black/30"
+                        placeholder="Start with your goals..."
+                        required></textarea>
+
+                      <button id="voiceBtn" type="button" class="icon-btn !p-2" title="Voice input">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                          <path d="M19 11a7 7 0 0 1-14 0" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                          <path d="M12 18v3" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      </button>
+
+                      <button id="stopBtn" type="button" class="icon-btn !p-2 hidden" title="Stop generating" aria-label="Stop generating">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M7 7h10v10H7z" stroke="#111827" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+
+                      <button id="chatSend" type="submit" class="icon-btn !p-2" title="Send">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M22 2 11 13" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+                          <path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
+
+                    <!-- Suggestion chips -->
+                    <div class="mt-4 flex items-center justify-center gap-4 text-xs text-black/35">
+                      <span class="h-px w-20 bg-black/10"></span>
+                      <span class="italic tracking-[0.18em] uppercase">suggested topics</span>
+                      <span class="h-px w-20 bg-black/10"></span>
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-2" id="examplePrompts"></div>
+                    <div id="attachmentRow" class="mt-2 flex flex-wrap gap-2"></div>
+                  </form>
+
+                  <div class="mt-2 text-xs text-black/35 flex items-center justify-between pb-2">
+                    <span>Streaming enabled</span>
+                    <button id="chatReset" type="button" class="hover:text-black/60">Reset</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Context menu -->
+    <div id="ctxMenu" class="hidden fixed z-[60]">
+      <div class="w-[220px] rounded-2xl bg-white shadow-menu border border-black/5 p-2">
+        <button data-action="share" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-black/5 text-sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 16v-9" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8.5 7.5 12 4l3.5 3.5" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 14.5v4A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-4" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Share
+        </button>
+
+        <button data-action="rename" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-black/5 text-sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Rename
+        </button>
+
+        <div class="my-2 h-px bg-black/5"></div>
+
+        <button data-action="delete" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-red-50 text-sm text-red-600">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6h18" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 6V4h8v2" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6.5 6l1 16h9l1-16" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 11v6M14 11v6" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 hidden z-[70]">
+      <div class="rounded-2xl bg-black/90 text-white px-4 py-2 text-sm shadow-soft">Copied</div>
+    </div>
+
+    <script type="module" src="/app/js/main.js"></script>
+  </body>
+</html>

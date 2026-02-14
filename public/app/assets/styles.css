@@ -1,0 +1,299 @@
+:root {
+        color-scheme: light;
+        --accent: #0B3D91; /* academic deep blue */
+        --paper: #F6F6F5;
+        --ink: #111827;
+        --muted: rgba(0,0,0,0.55);
+      }
+      html, body {
+        height: 100%;
+        overflow: hidden;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+        background: var(--paper);
+        letter-spacing: -0.01em;
+      }
+      body {
+        font-family: Inter, "Noto Sans SC", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      /* Hide scrollbars (but keep scroll) for sidebar chat list */
+      .no-scrollbar::-webkit-scrollbar { width: 0px; height: 0px; }
+      .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+      /* Subtle icon button hover*/
+      .icon-btn {
+        border-radius: 12px;
+        padding: 10px;
+        transition: background 120ms ease, transform 120ms ease;
+      }
+      .icon-btn:hover { background: rgba(0,0,0,0.05); }
+      .icon-btn:active { transform: scale(0.98); }
+
+      /* Toast */
+      #toast { pointer-events: none; }
+
+      /* typography for assistant output */
+      .assistant-md{
+        color: rgba(0,0,0,0.80);
+        font-size: 15px;
+        line-height: 1.75;
+        letter-spacing: -0.01em;
+        word-break: break-word;
+      }
+      @media (min-width: 768px){
+        .assistant-md{ font-size: 15.5px; }
+      }
+
+      .assistant-md > *:first-child{ margin-top: 0 !important; }
+      .assistant-md > *:last-child{ margin-bottom: 0 !important; }
+
+      .assistant-md p{
+        margin: 0.9em 0;
+      }
+
+      .assistant-md h1, .assistant-md h2, .assistant-md h3, .assistant-md h4{
+        color: rgba(0,0,0,0.88);
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+        margin: 1.2em 0 0.45em;
+      }
+      .assistant-md h1{ font-size: 1.55em; }
+      .assistant-md h2{ font-size: 1.28em; }
+      .assistant-md h3{ font-size: 1.12em; }
+      .assistant-md h4{ font-size: 1.00em; }
+
+      .assistant-md ul, .assistant-md ol{
+        margin: 0.9em 0 0.9em 1.25em;
+        padding: 0;
+      }
+      .assistant-md li{ margin: 0.35em 0; }
+      .assistant-md li > p{ margin: 0.35em 0; }
+
+      .assistant-md a{
+        color: rgba(17,24,39,0.92);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .assistant-md a:hover{ color: rgba(17,24,39,1); }
+
+      .assistant-md blockquote{
+        margin: 1.0em 0;
+        padding: 0.15em 0 0.15em 1.0em;
+        border-left: 3px solid rgba(0,0,0,0.14);
+        color: rgba(0,0,0,0.65);
+      }
+
+      .assistant-md hr{
+        margin: 1.4em 0;
+        border: 0;
+        border-top: 1px solid rgba(0,0,0,0.10);
+      }
+
+      .assistant-md code{
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.92em;
+        background: rgba(0,0,0,0.05);
+        padding: 0.14em 0.38em;
+        border-radius: 10px;
+      }
+
+      .assistant-md pre{
+        margin: 1.0em 0;
+        padding: 0.95em 1.05em;
+        overflow: auto;
+        border-radius: 16px;
+        background: rgba(0,0,0,0.05);
+      }
+      .assistant-md pre code{
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        font-size: 0.90em;
+        display: block;
+        white-space: pre;
+      }
+
+      .assistant-md table{
+        border-collapse: collapse;
+        margin: 1.0em 0;
+        width: 100%;
+        font-size: 0.98em;
+      }
+      .assistant-md th, .assistant-md td{
+        border: 1px solid rgba(0,0,0,0.12);
+        padding: 0.55em 0.65em;
+        vertical-align: top;
+      }
+      .assistant-md th{
+        background: rgba(0,0,0,0.04);
+        text-align: left;
+        font-weight: 600;
+        color: rgba(0,0,0,0.82);
+      }
+
+      /* WSJ-ish academic typography: serif for message content, sans for UI */
+      #brandWordmark{
+        font-family: "Source Serif 4", ui-serif, Georgia, "Times New Roman", Times, serif;
+        letter-spacing: -0.01em;
+      }
+      .assistant-md, .user-bubble, #chatInput{
+        font-family: "Source Serif 4", ui-serif, Georgia, "Times New Roman", Times, serif;
+      }
+      .assistant-md{
+        font-size: 16px;
+        line-height: 1.8;
+        color: rgba(0,0,0,0.82);
+      }
+      @media (min-width: 768px){
+        .assistant-md{ font-size: 16.5px; }
+      }
+
+      /* Chat scroll + fixed chrome (ChatGPT-like) */
+      #appShell{ height: 100vh; overflow: hidden; }
+      #mainScroll{ height: 100vh; overflow: hidden; }
+
+      /* User bubbles (Manus-like): white card, right-justified */
+      .user-row{ display: flex; justify-content: flex-end; }
+      .user-bubble{
+        max-width: min(560px, 88%);
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 14px;
+        padding: 12px 14px;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+        color: rgba(0,0,0,0.86);
+        font-size: 16px;
+        line-height: 1.7;
+        word-break: break-word;
+      }
+
+      /* References foldout */
+      details.refs{
+        margin-top: 14px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(0,0,0,0.10);
+      }
+      details.refs > summary{
+        list-style: none;
+        cursor: pointer;
+        user-select: none;
+        font-size: 13px;
+        font-family: Inter, "Noto Sans SC", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        color: rgba(0,0,0,0.55);
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      details.refs > summary::-webkit-details-marker{ display:none; }
+      details.refs > summary:before{
+        content: "▸";
+        display: inline-block;
+        transform: translateY(-0.5px);
+        transition: transform 120ms ease;
+      }
+      details.refs[open] > summary:before{ transform: rotate(90deg) translateX(1px); }
+      details.refs ul{
+        margin-top: 10px;
+      }
+      details.refs li{
+        color: rgba(0,0,0,0.70);
+      }
+
+      /* Mobile: tighten spacing */
+      @media (max-width: 640px){
+        .assistant-md{ font-size: 15.5px; }
+        .user-bubble{ font-size: 15.5px; max-width: 92%; }
+      }
+
+
+      @media print{
+        body{ overflow: visible !important; }
+        #sidebar, #topHeader, #composerBar, #sidebarBackdrop{ display:none !important; }
+        #mainScroll{ height:auto !important; overflow: visible !important; }
+        #chatScroll{ overflow: visible !important; }
+        .assistant-md, .user-bubble{ font-size: 12pt !important; }
+      }
+
+/* Mobile drawer */
+@media (max-width: 1023px) {
+  /* Sidebar becomes an off-canvas drawer */
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 50;
+    width: 296px !important;
+    transform: translateX(-102%);
+    transition: transform 200ms ease-out;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  }
+  body.sidebar-open #sidebar {
+    transform: translateX(0);
+  }
+  /* Backdrop */
+  #sidebarBackdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(0,0,0,0.25);
+  }
+}
+
+/* Desktop collapse (optional) */
+@media (min-width: 1024px) {
+  body.sidebar-collapsed #sidebar { width: 72px !important; }
+  body.sidebar-collapsed .sidebar-label { display: none !important; }
+
+  /* Collapsed rail: align icons, same size, single column */
+  body.sidebar-collapsed #sidebar button {
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    border-radius: 14px !important;
+  }
+  body.sidebar-collapsed #sidebar button svg { width: 20px; height: 20px; }
+
+  /* Disable interactions in collapsed mode (except the toggle button) */
+  body.sidebar-collapsed #sidebar button { pointer-events: none; }
+  body.sidebar-collapsed #sidebar #sidebarToggleBtn { pointer-events: auto; }
+
+  /* Keep spacing consistent */
+  body.sidebar-collapsed #sidebar .px-3,
+  body.sidebar-collapsed #sidebar .px-4 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Don't list every chat in collapsed mode */
+  body.sidebar-collapsed #chatList { display: none !important; }
+  body.sidebar-collapsed #chatCountPill { display: none !important; }
+
+  /* Show a single "Chats" icon in collapsed mode */
+  body.sidebar-collapsed #collapsedChatsBtn { display: flex !important; }
+
+  /* Center footer avatar */
+  body.sidebar-collapsed #sidebar .border-t .flex.items-center.gap-3 {
+    justify-content: center;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+}
+
+
+
+/* Toggle button placement: mobile in header, desktop in sidebar */
+@media (min-width: 1024px) {
+  #headerSidebarToggle { display: none !important; }
+}
+@media (max-width: 1023px) {
+  #sidebarToggleBtn { display: none !important; }
+}

@@ -231,20 +231,20 @@ app.post("/api/chat/stream", async (req, res) => {
 
 // Landing page
 app.get("/landing", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "landing", "landing.html"));
+  res.sendFile(path.join(__dirname, "public", "landing.html"));
 });
 
 // App as the homepage
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "app", "index.html"));
+  res.sendFile(path.join(__dirname, "app.html"));
 });
 
 // Optional: keep SPA behavior for app routes, but DON'T swallow /landing
 app.get("*", (req, res) => {
   if (req.path.startsWith("/landing")) {
-    return res.sendFile(path.join(__dirname, "public", "landing", "landing.html"));
+    return res.sendFile(path.join(__dirname, "public", "landing.html"));
   }
-  return res.sendFile(path.join(__dirname, "public", "app", "index.html"));
+  return res.sendFile(path.join(__dirname, "app.html"));
 });
 
 const port = process.env.PORT || 57678;
